@@ -7,11 +7,11 @@ import javax.swing.*;
 
 public class guestGUI extends JFrame implements ActionListener {
 	
-	private JButton mainButton = new JButton("Please click here to access the application");
+	
 
 	public guestGUI() {
 		
-		getContentPane().add(mainButton);
+	
 		
 		
 
