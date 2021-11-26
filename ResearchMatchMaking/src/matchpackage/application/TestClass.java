@@ -1,4 +1,4 @@
-package matchpackage;
+package matchpackage.application;
 
 import jade.core.Agent;
 public class TestClass extends Agent {
