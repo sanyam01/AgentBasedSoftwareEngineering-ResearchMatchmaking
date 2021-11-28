@@ -17,9 +17,11 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private JTextArea listProviders;
 	private JButton loginButton;
 	private JTextArea enterKeywords;
+	private GUIAgent guiAgent;
 
-	public GuestGUI() {
+	public GuestGUI(GUIAgent guiAgent) {
 
+		this.guiAgent = guiAgent;
 		jPanel = new JPanel(new BorderLayout());
 		subJPanel = new JPanel(new FlowLayout());
 		topPanel = new JPanel(new FlowLayout());
@@ -29,16 +31,12 @@ public class GuestGUI extends JFrame implements ActionListener {
 				+ " separated by comma for getting list of providers based on that.");
 		loginButton = new JButton("Sign up/Login in");
 
-//		topPanel.add(welcomeLabel, "West");
-//		topPanel.add(loginButton, "East");
-
 		topPanel.add(welcomeLabel);
 		topPanel.add(loginButton);
 
 		enterKeywords = new JTextArea(10, 30);
 		enterKeywords.setLineWrap(true);
 		loginButton = new JButton("Search");
-//		loginButton.setSize(20,20);
 
 		subJPanel.add(enterKeywords, "West");
 		subJPanel.add(loginButton, "East");
@@ -53,6 +51,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		setSize(500, 500);
 		setVisible(true);
 		pack();
+		
 
 	}
 

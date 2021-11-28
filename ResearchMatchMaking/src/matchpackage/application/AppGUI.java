@@ -12,8 +12,9 @@ public class AppGUI extends JFrame implements ActionListener {
 	private JLabel mainHeading = new JLabel("Hey! Welcome to the Research Matchmaking");
 	private JButton mainButton = new JButton("Please click here to access the application");
 	private GuestGUI guestGUI;
+	GUIAgent guiAgent;
 
-	AppGUI() {
+	AppGUI(GUIAgent guiAgent) {
 		
 		JPanel controlPanel = new JPanel(new BorderLayout());
 		controlPanel.add(mainHeading,"North");
@@ -22,12 +23,13 @@ public class AppGUI extends JFrame implements ActionListener {
 		setSize(300, 300);
 		setVisible(true);
 		mainButton.addActionListener(this);
+		this.guiAgent = guiAgent;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Yes! This button has been clicked.");
-		guestGUI = new GuestGUI();
+		guestGUI = new GuestGUI(guiAgent);
 		
 		
 		// TODO Auto-generated method stub
