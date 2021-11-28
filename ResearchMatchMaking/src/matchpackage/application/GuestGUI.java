@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import jade.core.behaviours.OneShotBehaviour;
+
 public class GuestGUI extends JFrame implements ActionListener {
 
 	private JPanel jPanel;
@@ -17,6 +19,8 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private JTextArea listProviders;
 	private JButton loginButton;
 	private JTextArea enterKeywords;
+	
+
 	private GUIAgent guiAgent;
 
 	public GuestGUI(GUIAgent guiAgent) {
@@ -41,7 +45,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		subJPanel.add(enterKeywords, "West");
 		subJPanel.add(loginButton, "East");
 
-		listProviders = new JTextArea("Here a list of providers will be shown", 10, 40);
+		listProviders = new JTextArea("THis is the list Sanyam", 10,40);
 
 		jPanel.add(topPanel, "North");
 		jPanel.add(subJPanel, "Center");
@@ -60,5 +64,34 @@ public class GuestGUI extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public JTextArea getListProviders() {
+		return listProviders;
+	}
+
+	public void setListProviders(String listProviders) {
+		this.listProviders = new JTextArea(listProviders);
+	}
+	
+	public void setContentListProvider (String content) {
+		
+
+		listProviders.setText(content);
+		
+		
+		
+		System.out.println("I am getting the content to set" + content);
+		
+	}
+
+	public JTextArea getEnterKeywords() {
+		return enterKeywords;
+	}
+
+	public void setEnterKeywords(JTextArea enterKeywords) {
+		this.enterKeywords = enterKeywords;
+	}
+	
+	
 
 }

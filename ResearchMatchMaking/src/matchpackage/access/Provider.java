@@ -27,6 +27,12 @@ public class Provider extends Customer {
 
 	}
 
+	public String getStringProvider() {
+		String attributeList = this.getName() + " " + this.website + " " + this.logo + " " + this.compensation + " "
+				+ this.icon + " " + this.resume + " " + this.plan;
+		return attributeList;
+	}
+
 	public ArrayList<String> getApprovals() {
 		return approvals;
 	}

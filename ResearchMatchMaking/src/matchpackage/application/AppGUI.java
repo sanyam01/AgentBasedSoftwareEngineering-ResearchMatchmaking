@@ -12,7 +12,9 @@ public class AppGUI extends JFrame implements ActionListener {
 	private JLabel mainHeading = new JLabel("Hey! Welcome to the Research Matchmaking");
 	private JButton mainButton = new JButton("Please click here to access the application");
 	private GuestGUI guestGUI;
-	GUIAgent guiAgent;
+	private GUIAgent guiAgent;
+
+	
 
 	AppGUI(GUIAgent guiAgent) {
 		
@@ -30,10 +32,20 @@ public class AppGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Yes! This button has been clicked.");
 		guestGUI = new GuestGUI(guiAgent);
+		guiAgent.setStep(1);
+		System.out.println("I have done the value 1");
 		
 		
 		// TODO Auto-generated method stub
 
+	}
+	
+	public GuestGUI getGuestGUI() {
+		return guestGUI;
+	}
+
+	public void setGuestGUI(GuestGUI guestGUI) {
+		this.guestGUI = guestGUI;
 	}
 
 }
