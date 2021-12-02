@@ -19,6 +19,15 @@ public class GUIAgent extends Agent {
 
 	AppGUI appGUI;
 	private int step = 0;
+	private boolean bool = false;
+
+	public boolean isBool() {
+		return bool;
+	}
+
+	public void setBool(boolean bool) {
+		this.bool = bool;
+	}
 
 	protected void setup() {
 
@@ -29,7 +38,16 @@ public class GUIAgent extends Agent {
 
 		appGUI = new AppGUI(this);
 		createAgent("Access", "matchpackage.access.AccessAgent");
-		addBehaviour(new getListProviders());
+		createAgent("Search", "matchpackage.search.SearchAgent");
+		addBehaviour(new getListProviders(""));
+	}
+
+	public void callSearchKeywords(String keywords) {
+		// TODO Auto-generated method stub
+		System.out.println("I am reaching in method in GUI Agent 5");
+		addBehaviour(new getListProviders(keywords));
+		
+		
 	}
 
 	private void createAgent(String name, String className) {
@@ -47,6 +65,13 @@ public class GUIAgent extends Agent {
 
 	public class getListProviders extends Behaviour implements Runnable {
 
+		String keywords;
+
+		private getListProviders(String words) {
+			this.keywords = words;
+
+		}
+
 		@Override
 		public void action() {
 
@@ -60,23 +85,45 @@ public class GUIAgent extends Agent {
 				send(msg);
 				ACLMessage msgGet = myAgent.blockingReceive();
 				System.out.println(msgGet);
-//				appGUI.getGuestGUI().setListProviders(msgGet.getContent());
-//				appGUI.getGuestGUI().setContentListProvider(msgGet.getContent() + "\n");
-				
-				SwingUtilities.invokeLater(new Runnable() {
-				    @Override
-				    public void run() {
 
-				    	appGUI.getGuestGUI().setContentListProvider(msgGet.getContent() + "\n");
-				    	appGUI.getGuestGUI().setListProviders(msgGet.getContent());
-				    }
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+
+						appGUI.getGuestGUI().setContentListProvider(msgGet.getContent() + "\n");
+						
+					}
 				});
-				
+
 				System.out.println("I am back in GUIAgent");
+				bool = true;
 				break;
 
 			case 2:
+				
+				ACLMessage msgSearch = new ACLMessage(ACLMessage.REQUEST);
+				msgSearch.addReceiver(new AID("Search", AID.ISLOCALNAME));
+				msgSearch.setLanguage("English");
+				msgSearch.setContent(keywords);
+				send(msgSearch);
+				ACLMessage msgResponse = myAgent.blockingReceive();
+				System.out.println(msgResponse);
+
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+
+						appGUI.getGuestGUI().setContentListProvider(msgResponse.getContent() + "\n");
+						appGUI.getGuestGUI().setEnterKeywords("");
+						
+						System.out.println("1000");
+					}
+				});
+
+				System.out.println("I am back in case2");
+				bool = true;
 				break;
+
 
 			}
 
@@ -85,22 +132,18 @@ public class GUIAgent extends Agent {
 		@Override
 		public boolean done() {
 			// TODO Auto-generated method stub
-			if (step == 1) {
-				return true;
-			}
 
-			return false;
+			return bool;
+
 		}
 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 	}
-	
-
 
 	public int getStep() {
 		return step;
@@ -109,4 +152,6 @@ public class GUIAgent extends Agent {
 	public void setStep(int step) {
 		this.step = step;
 	}
+
+	
 }

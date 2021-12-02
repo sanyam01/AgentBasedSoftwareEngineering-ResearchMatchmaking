@@ -6,6 +6,7 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import matchpackage.application.AppGUI;
 import matchpackage.application.GuestGUI;
+import matchpackage.database.ProviderList;
 
 public class AccessAgent extends Agent {
 	

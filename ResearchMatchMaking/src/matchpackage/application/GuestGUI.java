@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import jade.core.behaviours.OneShotBehaviour;
+import matchpackage.access.SignUpGUI;
 
 public class GuestGUI extends JFrame implements ActionListener {
 
@@ -17,11 +18,14 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private JPanel subJPanel;
 	private JPanel topPanel;
 	private JTextArea listProviders;
+	private JButton signupButton;
 	private JButton loginButton;
 	private JTextArea enterKeywords;
+	private JButton searchButton;
 	
 
 	private GUIAgent guiAgent;
+	private SignUpGUI signUpGui;
 
 	public GuestGUI(GUIAgent guiAgent) {
 
@@ -33,17 +37,23 @@ public class GuestGUI extends JFrame implements ActionListener {
 		welcomeLabel = new JLabel(
 				"Welcome as a Guest to the research matchmaking. Please enter list of keywords"
 				+ " separated by comma for getting list of providers based on that.");
-		loginButton = new JButton("Sign up/Login in");
+		loginButton = new JButton("Login in");
+		signupButton = new JButton("Sign up");
+		loginButton.addActionListener(this);
+		signupButton.addActionListener(this);
+		
 
 		topPanel.add(welcomeLabel);
 		topPanel.add(loginButton);
+		topPanel.add(signupButton);
 
 		enterKeywords = new JTextArea(10, 30);
 		enterKeywords.setLineWrap(true);
-		loginButton = new JButton("Search");
+		searchButton = new JButton("Search");
+		searchButton.addActionListener(this);
 
 		subJPanel.add(enterKeywords, "West");
-		subJPanel.add(loginButton, "East");
+		subJPanel.add(searchButton, "East");
 
 		listProviders = new JTextArea("THis is the list Sanyam", 10,40);
 
@@ -62,8 +72,23 @@ public class GuestGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if (e.getSource() == searchButton) {
+			
+			System.out.println("Button has been pressed");
+			String keywords = enterKeywords.getText();
+			guiAgent.setStep(2);
+			guiAgent.callSearchKeywords(keywords);
+		}
+			
+		if(e.getSource() == signupButton) {
+			
+			 signUpGui = new SignUpGUI();
+			 
+		}
+		
 
 	}
+	
 	
 	public JTextArea getListProviders() {
 		return listProviders;
@@ -80,7 +105,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		
 		
 		
-		System.out.println("I am getting the content to set" + content);
+		System.out.println("I am getting the content to set " + content);
 		
 	}
 
@@ -88,8 +113,8 @@ public class GuestGUI extends JFrame implements ActionListener {
 		return enterKeywords;
 	}
 
-	public void setEnterKeywords(JTextArea enterKeywords) {
-		this.enterKeywords = enterKeywords;
+	public void setEnterKeywords(String keywords) {
+		this.enterKeywords.setText(keywords); 
 	}
 	
 	

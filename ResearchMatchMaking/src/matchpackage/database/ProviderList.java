@@ -1,4 +1,4 @@
-package matchpackage.access;
+package matchpackage.database;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ public class ProviderList {
 
 	ArrayList<Provider> providers = new ArrayList<Provider>();
 
-	ProviderList() {
+	public ProviderList() {
 
 		ArrayList<String> pro1List = new ArrayList<String>();
 		pro1List.add("html");

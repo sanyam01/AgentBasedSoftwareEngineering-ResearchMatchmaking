@@ -1,4 +1,4 @@
-package matchpackage.access;
+package matchpackage.database;
 
 public class Customer {
 	
