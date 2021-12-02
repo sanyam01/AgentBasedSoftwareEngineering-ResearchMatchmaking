@@ -29,6 +29,8 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JTextArea hourlyCompensationText;
 
 	private JComboBox<String> serviceComboBox;
+	
+	private ProviderGUI providerGui;
 
 	public SignUpGUI() {
 
@@ -135,6 +137,8 @@ public class SignUpGUI extends JFrame implements ActionListener {
 
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
+			providerGui = new ProviderGUI();
+			
 		}
 	}
 

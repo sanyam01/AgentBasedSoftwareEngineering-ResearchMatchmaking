@@ -17,6 +17,7 @@ public class LoginGUI extends JFrame implements ActionListener {
 
 		private JTextArea nameText;
 		private JTextArea passwordText;
+		private CustomerGUI customerGui;
 		
 		
 
@@ -62,6 +63,7 @@ public class LoginGUI extends JFrame implements ActionListener {
 
 			if (e.getSource() == submit) {
 				System.out.println("Submit button has been clicked");
+				customerGui = new CustomerGUI();
 			}
 		}
 
