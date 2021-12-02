@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import jade.core.behaviours.OneShotBehaviour;
+import matchpackage.access.LoginGUI;
 import matchpackage.access.SignUpGUI;
 
 public class GuestGUI extends JFrame implements ActionListener {
@@ -22,10 +23,10 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private JButton loginButton;
 	private JTextArea enterKeywords;
 	private JButton searchButton;
-	
 
 	private GUIAgent guiAgent;
 	private SignUpGUI signUpGui;
+	private LoginGUI loginGUI;
 
 	public GuestGUI(GUIAgent guiAgent) {
 
@@ -34,14 +35,14 @@ public class GuestGUI extends JFrame implements ActionListener {
 		subJPanel = new JPanel(new FlowLayout());
 		topPanel = new JPanel(new FlowLayout());
 
-		welcomeLabel = new JLabel(
-				"Welcome as a Guest to the research matchmaking. Please enter list of keywords"
+		welcomeLabel = new JLabel("Welcome as a Guest to the research matchmaking. Please enter list of keywords"
 				+ " separated by comma for getting list of providers based on that.");
 		loginButton = new JButton("Login in");
 		signupButton = new JButton("Sign up");
 		loginButton.addActionListener(this);
 		signupButton.addActionListener(this);
-		
+		loginButton.addActionListener(this);
+		signupButton.addActionListener(this);
 
 		topPanel.add(welcomeLabel);
 		topPanel.add(loginButton);
@@ -55,7 +56,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		subJPanel.add(enterKeywords, "West");
 		subJPanel.add(searchButton, "East");
 
-		listProviders = new JTextArea("THis is the list Sanyam", 10,40);
+		listProviders = new JTextArea("This is the list Sanyam", 10, 40);
 
 		jPanel.add(topPanel, "North");
 		jPanel.add(subJPanel, "Center");
@@ -65,7 +66,6 @@ public class GuestGUI extends JFrame implements ActionListener {
 		setSize(500, 500);
 		setVisible(true);
 		pack();
-		
 
 	}
 
@@ -73,23 +73,25 @@ public class GuestGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == searchButton) {
-			
+
 			System.out.println("Button has been pressed");
 			String keywords = enterKeywords.getText();
 			guiAgent.setStep(2);
 			guiAgent.callSearchKeywords(keywords);
 		}
-			
-		if(e.getSource() == signupButton) {
-			
-			 signUpGui = new SignUpGUI();
-			 
+
+		if (e.getSource() == signupButton) {
+
+			signUpGui = new SignUpGUI();
+
 		}
 		
+		if (e.getSource() == loginButton) {
+			loginGUI = new LoginGUI();
+		}
 
 	}
-	
-	
+
 	public JTextArea getListProviders() {
 		return listProviders;
 	}
@@ -97,16 +99,12 @@ public class GuestGUI extends JFrame implements ActionListener {
 	public void setListProviders(String listProviders) {
 		this.listProviders = new JTextArea(listProviders);
 	}
-	
-	public void setContentListProvider (String content) {
-		
+
+	public void setContentListProvider(String content) {
 
 		listProviders.setText(content);
-		
-		
-		
 		System.out.println("I am getting the content to set " + content);
-		
+
 	}
 
 	public JTextArea getEnterKeywords() {
@@ -114,9 +112,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 	}
 
 	public void setEnterKeywords(String keywords) {
-		this.enterKeywords.setText(keywords); 
+		this.enterKeywords.setText(keywords);
 	}
-	
-	
 
 }

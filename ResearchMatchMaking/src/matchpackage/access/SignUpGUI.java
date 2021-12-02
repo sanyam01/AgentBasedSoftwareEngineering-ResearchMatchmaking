@@ -1,5 +1,6 @@
 package matchpackage.access;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,24 +15,31 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JLabel logo;
 	private JLabel keywords;
 	private JLabel service;
-	private JPanel right, left, overall;
-	
+	private JLabel headerLabel;
+	private JLabel hourlyCompensation;
+	private JButton submit;
+	private JPanel header, bottom, overall, total;
+
 	private JTextArea nameText;
 	private JTextArea passwordText;
 	private JTextArea resumeText;
 	private JTextArea websiteText;
 	private JTextArea logoText;
 	private JTextArea keywordsText;
-	
+	private JTextArea hourlyCompensationText;
+
 	private JComboBox<String> serviceComboBox;
-	
-	
+
 	public SignUpGUI() {
-		
+
 		overall = new JPanel();
-		left = new JPanel();
-		right = new JPanel();
-		
+		total = new JPanel();
+		total.setLayout(new BoxLayout(total, BoxLayout.PAGE_AXIS));
+
+		headerLabel = new JLabel("Please enter the details for signing up");
+		submit = new JButton("Submit");
+		submit.addActionListener(this);
+
 		name = new JLabel("Name");
 		password = new JLabel("Password");
 		resume = new JLabel("Resume");
@@ -39,52 +47,95 @@ public class SignUpGUI extends JFrame implements ActionListener {
 		logo = new JLabel("Logo");
 		keywords = new JLabel("Keywords");
 		service = new JLabel("Service");
-		
+		hourlyCompensation = new JLabel("Hourly Compensation");
+
 		nameText = new JTextArea("");
 		passwordText = new JTextArea("");
 		resumeText = new JTextArea("");
 		websiteText = new JTextArea("");
 		logoText = new JTextArea("");
 		keywordsText = new JTextArea("");
-		
-		String[] choices = {"Client", "Provider"};
-		
+		hourlyCompensationText = new JTextArea("");
+
+		String[] choices = { "Provider", "Client" };
+
 		serviceComboBox = new JComboBox<String>(choices);
+		serviceComboBox.addActionListener(this);
+
+		overall.setLayout(new GridLayout(8, 2, 1, 1));
+		overall.add(name);
+		overall.add(nameText);
+
+		overall.add(password);
+		overall.add(passwordText);
+
+		overall.add(service);
+		overall.add(serviceComboBox);
+
+		overall.add(resume);
+		overall.add(resumeText);
+
+		overall.add(website);
+		overall.add(websiteText);
+
+		overall.add(logo);
+		overall.add(logoText);
+
+		overall.add(keywords);
+		overall.add(keywordsText);
 		
-		left = new JPanel(new BoxLayout(left, BoxLayout.Y_AXIS));
-		left.add(name);
-		left.add(password);
-		left.add(service);
-		left.add(resume);
-		left.add(website);
-		left.add(logo);
-		left.add(keywords);
-		
-		right = new JPanel(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.add(nameText);
-		right.add(passwordText);
-		right.add(serviceComboBox);
-		right.add(resumeText);
-		right.add(websiteText);
-		right.add(logoText);
-		right.add(keywordsText);
-		
-		overall.setLayout(new BoxLayout(overall, BoxLayout.X_AXIS));
-		overall.add(left);
-		overall.add(right);
-		
-		getContentPane().add(overall);
-		setSize(300, 300);
+		overall.add(hourlyCompensation);
+		overall.add(hourlyCompensationText);
+
+		total.add(headerLabel);
+		total.add(overall);
+		total.add(submit);
+
+		getContentPane().add(total);
+		setSize(400, 400);
 		setVisible(true);
-		
 
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		if (e.getSource() == serviceComboBox) {
+
+			String x = serviceComboBox.getSelectedItem().toString();
+
+			if (x.equals("Client")) {
+
+				resumeText.setText("NA");
+				websiteText.setText("NA");
+				logoText.setText("NA");
+				keywordsText.setText("NA");
+
+				resumeText.setEditable(false);
+				websiteText.setEditable(false);
+				logoText.setEditable(false);
+				keywordsText.setEditable(false);
+			}
+
+			if (x.equals("Provider")) {
+
+				resumeText.setText("");
+				websiteText.setText("");
+				logoText.setText("");
+				keywordsText.setText("");
+
+				resumeText.setEditable(true);
+				websiteText.setEditable(true);
+				logoText.setEditable(true);
+				keywordsText.setEditable(true);
+			}
+			
+
+		}
+
+		if (e.getSource() == submit) {
+			System.out.println("Submit button has been clicked");
+		}
 	}
 
 }
