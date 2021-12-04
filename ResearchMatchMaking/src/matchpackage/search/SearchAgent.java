@@ -9,8 +9,6 @@ import matchpackage.search.SortProvidersList;
 
 public class SearchAgent extends Agent {
 
-	
-
 	protected void setup() {
 
 		System.out.println("I am a Search Agent");
@@ -32,12 +30,6 @@ public class SearchAgent extends Agent {
 			ACLMessage msg = myAgent.blockingReceive();
 			System.out.println(msg);
 			ACLMessage reply = msg.createReply();
-
-//			for (Provider provider : providerList.getProviders()) {
-//
-//				System.out.println(provider);
-//
-//			}
 
 			reply.setContent("Yup its working" + new SortProvidersList(msg.getContent()).sortProvidersList());
 			send(reply);
