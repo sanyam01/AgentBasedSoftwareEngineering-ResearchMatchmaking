@@ -6,6 +6,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import matchpackage.afterMarket.ClientFeedbackGUI;
+import matchpackage.afterMarket.ProviderFeedbackGUI;
+import matchpackage.projectCreator.ClientChatGUI;
+import matchpackage.projectCreator.ProviderChatGUI;
+import matchpackage.tracker.ClientProjectGUI;
+import matchpackage.tracker.ProviderProjectGUI;
+
 public class SignUpGUI extends JFrame implements ActionListener {
 
 	private JLabel name;
@@ -31,6 +38,12 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JComboBox<String> serviceComboBox;
 	
 	private ProviderGUI providerGui;
+	private ClientChatGUI clientChatGUI;
+	private ProviderChatGUI providerChatGUI;
+	private ClientFeedbackGUI clientFeedbackGUI;
+	private ProviderFeedbackGUI providerFeedbackGUI;
+	private ProviderProjectGUI providerProjectGUI;
+	private ClientProjectGUI clientProjectGUI;
 
 	public SignUpGUI() {
 
@@ -94,6 +107,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 		total.add(submit);
 
 		getContentPane().add(total);
+		setTitle("Sign up Interface");
 		setSize(400, 400);
 		setVisible(true);
 
@@ -138,7 +152,12 @@ public class SignUpGUI extends JFrame implements ActionListener {
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
 			providerGui = new ProviderGUI();
-			
+			clientChatGUI = new ClientChatGUI();
+			providerChatGUI = new ProviderChatGUI();
+			providerFeedbackGUI = new ProviderFeedbackGUI();
+			clientFeedbackGUI = new ClientFeedbackGUI();
+			providerProjectGUI = new ProviderProjectGUI();
+			clientProjectGUI = new ClientProjectGUI();			
 		}
 	}
 

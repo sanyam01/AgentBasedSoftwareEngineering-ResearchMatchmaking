@@ -89,6 +89,7 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		overallPanel.add(thirdPanel);
 		
 		getContentPane().add(overallPanel);
+		setTitle("Customer Interface");
 		setSize(600, 600);
 		setVisible(true);
 

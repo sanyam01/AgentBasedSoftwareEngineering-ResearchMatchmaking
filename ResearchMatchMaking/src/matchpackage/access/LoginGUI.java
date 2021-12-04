@@ -51,6 +51,7 @@ public class LoginGUI extends JFrame implements ActionListener {
 			total.add(submit);
 
 			getContentPane().add(total);
+			setTitle("Login Interface");
 			setSize(300, 300);
 			setVisible(true);
 

@@ -21,6 +21,7 @@ public class ProviderGUI extends JFrame implements ActionListener {
 	private JLabel planLabel;
 	private JLabel iconLabel;
 	private JScrollPane scrollPaneProviders;
+	private JTextArea verifiedIconLabel;
 	
 
 	private JLabel bids;
@@ -66,13 +67,16 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		jPanel2.add(planComboBox);
 		jPanel2.add(submitPlan);
 
-		iconLabel = new JLabel("Please submit  verified icon");
+		iconLabel = new JLabel("Please submit  verified proof of business");
 		verifiedIcon = new JTextArea("",5,30);
 		submitIcon = new JButton("Submit Icon");
+		verifiedIconLabel = new JTextArea("",5,30);
+		
 
 		jPanel3.add(iconLabel);
 		jPanel3.add(verifiedIcon);
 		jPanel3.add(submitIcon);
+		jPanel3.add(verifiedIconLabel);
 
 		bids = new JLabel("Bids");
 		bidText = new JTextArea("",5,30);
@@ -101,7 +105,8 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		overallJPanel.add(jPanel5);
 
 		getContentPane().add(overallJPanel);
-		setSize(600, 600);
+		setTitle("Provider Interface");
+		setSize(800, 800);
 		setVisible(true);
 		
 
