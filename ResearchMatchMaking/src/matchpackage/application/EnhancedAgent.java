@@ -28,7 +28,9 @@ public class EnhancedAgent extends Agent {
 			DFAgentDescription[] results = DFService.search(this, dfd, sc);
 			for (DFAgentDescription result : results) {
 				foundAgents.add(result.getName());
+			
 			}
+			System.out.println("I am  in DFAgent Desription");
 			return foundAgents;
 		} catch (FIPAException ex) {
 			ex.printStackTrace();
@@ -43,9 +45,9 @@ public class EnhancedAgent extends Agent {
 		}
 	}
 
-	protected void register(String serviceName) {
+	protected void register(String serviceName, AID accessAID) {
 		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
+		dfd.setName(accessAID);
 		ServiceDescription sd = new ServiceDescription();
 		sd.setName(getLocalName());
 		sd.setType(serviceName.toLowerCase());
@@ -57,7 +59,7 @@ public class EnhancedAgent extends Agent {
 		}
 	}
 	
-	private AID createAgent(String name, String className) {
+	protected AID createAgentAID(String name, String className) {
 		AID agentID = new AID(name, AID.ISLOCALNAME);
 		ContainerController controller = getContainerController();
 
@@ -72,5 +74,20 @@ public class EnhancedAgent extends Agent {
 		return agentID;
 
 	}
+	
+	protected void createAgent(String name, String className) {
+		AID agentID = new AID(name, AID.ISLOCALNAME);
+		ContainerController controller = getContainerController();
+
+		try {
+			AgentController agent = controller.createNewAgent(name, className, null);
+			agent.start();
+			System.out.println("+++ Created: " + agentID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 
 }

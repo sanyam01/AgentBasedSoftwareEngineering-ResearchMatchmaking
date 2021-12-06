@@ -7,7 +7,7 @@ public class CustomerList {
 	
 	ArrayList <Customer> customers= new ArrayList<Customer>();
 	
-	CustomerList (){
+	public CustomerList (){
 		Customer cust1 = new Customer ("sanyam", "password1");
 		Customer cust2 = new Customer ("jasneet", "password2");
 		

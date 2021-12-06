@@ -29,7 +29,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private GUIAgent guiAgent;
 	private SignUpGUI signUpGui;
 	private LoginGUI loginGUI;
-	String[] columnNames = { "Name", "Website", "Logo", "Resume", "Keywords" };
+	String[] columnNames = { "Name", "Website", "Logo", "Keywords", "Resume" };
 
 	public GuestGUI(GUIAgent guiAgent) {
 
@@ -83,7 +83,9 @@ public class GuestGUI extends JFrame implements ActionListener {
 			System.out.println("Button has been pressed");
 			String keywords = enterKeywords.getText();
 			guiAgent.setStep(2);
-			guiAgent.callSearchKeywords(keywords);
+			//guiAgent.callSearchKeywords(keywords);
+			
+			
 		}
 
 		if (e.getSource() == signupButton) {
@@ -93,7 +95,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		}
 
 		if (e.getSource() == loginButton) {
-			loginGUI = new LoginGUI();
+			loginGUI = new LoginGUI(this.guiAgent);
 		}
 
 	}
@@ -104,6 +106,10 @@ public class GuestGUI extends JFrame implements ActionListener {
 
 	public void setListProviders(String listProviders) {
 		this.listProviders = new JTextArea(listProviders);
+	}
+	
+	public String getStringKeyWords() {
+		return enterKeywords.getText();
 	}
 
 	public void setContentListProvider(String content) {

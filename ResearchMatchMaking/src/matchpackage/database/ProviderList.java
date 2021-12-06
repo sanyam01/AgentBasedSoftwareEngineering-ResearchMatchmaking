@@ -19,10 +19,10 @@ public class ProviderList {
 		pro2List.add("react");
 		pro2List.add("angular");
 
-		Provider pro1 = new Provider("codezero", "codepassword", "https://codezero.io/", "logo1", 10, "icon1", pro1List,
-				"resume1", "basic");
-		Provider pro2 = new Provider("thehack", "hackpassword", "https://hackdesign.org/", "logo2", 15, "icon2",
-				pro2List, "resume2", "premium");
+		Provider pro1 = new Provider("codezero", "codepassword", "https://codezero.io/", "logo1", 10, pro1List,
+				"resume1");
+		Provider pro2 = new Provider("thehack", "hackpassword", "https://hackdesign.org/", "logo2", 15,
+				pro2List, "resume2");
 
 		providers.add(pro1);
 		providers.add(pro2);

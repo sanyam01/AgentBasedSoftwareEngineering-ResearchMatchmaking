@@ -53,8 +53,8 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		
 		scrollPaneProviders = new JScrollPane(listProviders);
 
-		jPanel1.add(listLabel);
-		jPanel1.add(scrollPaneProviders);
+//		jPanel1.add(listLabel);
+//		jPanel1.add(scrollPaneProviders);
 		jPanel1.add(logOut);
 
 		String[] choices = { "Basic", "Premium" };
@@ -107,7 +107,7 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		getContentPane().add(overallJPanel);
 		setTitle("Provider Interface");
 		setSize(800, 800);
-		setVisible(true);
+		setVisible(false);
 		
 
 	}
@@ -116,6 +116,10 @@ public class ProviderGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void showGUI() {
+		this.setVisible(true);
 	}
 
 }

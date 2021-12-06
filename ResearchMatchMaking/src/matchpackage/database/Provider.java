@@ -9,59 +9,56 @@ public class Provider extends Customer {
 	private String website;
 	private String logo;
 	private double compensation;
-	private String icon;
+	private String icon = "";
 	private ArrayList<String> keywords;
 	private String resume;
-	private String plan;
+	private String plan = "";
 	private ArrayList<String> approvals;
 	private ArrayList<String> projects;
-	//private AID providerAID;
+	// private AID providerAID;
 
-	Provider(String name, String password, String website, String logo, double compensation, String icon,
-			ArrayList<String> keywords, String resume, String plan) {
+	public Provider(String name, String password, String website, String logo, double compensation,
+			ArrayList<String> keywords, String resume) {
 		super(name, password);
 		setWebsite(website);
 		setLogo(logo);
 		setCompensation(compensation);
-		setIcon(icon);
 		setKeywords(keywords);
 		setResume(resume);
-		setPlan(plan);
+
 		approvals = new ArrayList<String>();
 		projects = new ArrayList<String>();
 
 	}
-	
+
 //	public void setAID(AID aid) {
 //		this.providerAID = aid;
 //	}
 
 	public String getStringProvider() {
-		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.compensation
-				+ "*" + this.icon + "*" + this.resume + "*" + this.plan;
+		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords() + "*"
+				+ this.resume + "*" + this.compensation;
 		return attributeList;
 	}
 
 	public String getStringProviderGuest() {
 
-		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords()
-				+ "*" + this.resume;
+		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords() + "*"
+				+ this.resume;
 
 		return attributeList;
 
 	}
-	
+
 	public void addApproval(String approval) {
 		approvals.add(approval);
-		
+
 	}
-	
+
 	public void addProject(String project) {
 		approvals.add(project);
-		
+
 	}
-	
-	
 
 	public ArrayList<String> getApprovals() {
 		return approvals;

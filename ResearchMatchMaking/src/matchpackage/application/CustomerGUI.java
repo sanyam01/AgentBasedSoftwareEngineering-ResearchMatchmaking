@@ -10,7 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 
 public class CustomerGUI extends JFrame implements ActionListener {
 
@@ -22,6 +24,10 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	private JButton searchButton;
 
 	private JTextArea listProviders;
+	DefaultTableModel tableModel;
+	String[] columnNames = { "Name", "Website", "Logo", "Keywords", "Resume", "Compensation" };
+	private JScrollPane scrollProviders;
+	private JTable providerTable;
 
 	private JLabel bidValue;
 	private JTextArea bidValueArea;
@@ -58,10 +64,14 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		firstPanel.add(searchButton);
 
 		listProviders = new JTextArea();
-		JScrollPane scrollPaneList = new JScrollPane(listProviders);
+		providerTable = new JTable();
+		tableModel = (DefaultTableModel) providerTable.getModel();
+		tableModel.setColumnIdentifiers(columnNames);
+		scrollProviders = new JScrollPane(providerTable);
+		// JScrollPane scrollPaneList = new JScrollPane(listProviders);
 
 		bidValue = new JLabel("Enter bid value");
-		bidValueArea = new JTextArea(10,20);
+		bidValueArea = new JTextArea(10, 20);
 		bidButton = new JButton("Submit Bid");
 
 		secondPanel.add(bidValue);
@@ -71,7 +81,7 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		bidAcceptance = new JTextArea();
 
 		contract = new JLabel("Contract");
-		contractArea = new JTextArea(10,20);
+		contractArea = new JTextArea(10, 20);
 		acceptContractButton = new JButton("Accept Contract");
 		rejectContractButton = new JButton("Reject Contract");
 
@@ -83,15 +93,15 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		thirdPanel.add(buttonPanel);
 
 		overallPanel.add(firstPanel);
-		overallPanel.add(scrollPaneList);
+		overallPanel.add(scrollProviders);
 		overallPanel.add(secondPanel);
 		overallPanel.add(bidAcceptance);
 		overallPanel.add(thirdPanel);
-		
+
 		getContentPane().add(overallPanel);
 		setTitle("Customer Interface");
 		setSize(600, 600);
-		setVisible(true);
+		setVisible(false);
 
 	}
 
@@ -99,6 +109,46 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void showGUI() {
+		this.setVisible(true);
+	}
+
+	public void setContentListProvider(String content) {
+
+		tableModel.setRowCount(0);
+		tableModel.fireTableDataChanged();
+		System.out.println("I am in here updating the table in GUI agent");
+
+		String[] listRows = content.split("\n");
+
+		int numRows = (int) listRows.length;
+
+		String[][] providerData = new String[numRows][5];
+
+		for (int i = 0; i < numRows; i++) {
+			String[] data = listRows[i].split("\\*");
+
+
+			tableModel.addRow(data);
+
+		}
+
+		tableModel.fireTableDataChanged();
+
+		System.out.println("I am getting the content to set " + content);
+		providerTable.repaint();
+
+	}
+	
+	public void tableRepaint() {
+		//providerTable.repaint();
+		tableModel.fireTableDataChanged();
+	}
+	
+	public JTable getProviderTable() {
+		return providerTable;
 	}
 
 }

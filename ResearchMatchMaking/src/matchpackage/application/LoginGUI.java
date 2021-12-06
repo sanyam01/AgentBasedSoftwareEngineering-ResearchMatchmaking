@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import jade.core.AID;
+
 public class LoginGUI extends JFrame implements ActionListener {
 
 
@@ -17,12 +19,13 @@ public class LoginGUI extends JFrame implements ActionListener {
 
 		private JTextArea nameText;
 		private JTextArea passwordText;
-		private CustomerGUI customerGui;
+		private GUIAgent guiAgent;
 		
 		
 
-		public LoginGUI() {
+		public LoginGUI(GUIAgent guiAgent) {
 
+			this.guiAgent = guiAgent;
 			overall = new JPanel();
 			total = new JPanel();
 			total.setLayout(new BoxLayout(total, BoxLayout.PAGE_AXIS));
@@ -65,8 +68,14 @@ public class LoginGUI extends JFrame implements ActionListener {
 			
 
 			if (e.getSource() == submit) {
-				System.out.println("Submit button has been clicked");
-				customerGui = new CustomerGUI();
+				System.out.println("Submit Login button has been clicked");
+				guiAgent.showCustomerProviderGUI(nameText.getText());
+				//guiAgent.setStep(3);
+		
+				
+				
+				
+				
 			}
 		}
 

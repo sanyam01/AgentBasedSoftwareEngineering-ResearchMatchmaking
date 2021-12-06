@@ -32,7 +32,7 @@ public class AppGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Yes! This button has been clicked.");
 		guestGUI = new GuestGUI(guiAgent);
-		guiAgent.setStep(1);
+		guiAgent.setGuestProviders();
 		
 		
 

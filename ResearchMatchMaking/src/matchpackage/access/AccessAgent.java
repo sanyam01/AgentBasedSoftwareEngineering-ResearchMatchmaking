@@ -13,7 +13,7 @@ import matchpackage.application.EnhancedAgent;
 import matchpackage.application.GuestGUI;
 import matchpackage.database.ProviderList;
 
-public class AccessAgent extends EnhancedAgent {
+public class AccessAgent extends Agent {
 
 	private ProviderList providerList;
 
@@ -22,9 +22,15 @@ public class AccessAgent extends EnhancedAgent {
 		providerList = new ProviderList();
 		System.out.println("I am an Access Agent");
 		addBehaviour(new CallForProvidersList());
-		createAllProviderAgent(providerList);
+		//createAllProviderAgent(providerList);
 
 	}
+	
+//	public void createAllProviderAgent(ProviderList providers) {
+//		for (providers.getProviders(): providers) {
+//			AID providerAID = providers
+//		}
+//	}
 
 	public class CallForProvidersList extends OneShotBehaviour {
 
@@ -40,14 +46,14 @@ public class AccessAgent extends EnhancedAgent {
 		}
 	}
 	
-	protected void takeDown() {
-		
-		try {
-			DFService.deregister(this);
-		}
-		catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-	}
+//	protected void takeDown() {
+//		
+//		try {
+//			DFService.deregister(this);
+//		}
+//		catch (FIPAException fe) {
+//			fe.printStackTrace();
+//		}
+//	}
 
 }

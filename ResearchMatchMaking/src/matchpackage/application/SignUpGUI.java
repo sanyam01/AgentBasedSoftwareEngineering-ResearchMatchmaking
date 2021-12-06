@@ -3,6 +3,7 @@ package matchpackage.application;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -36,7 +37,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JTextArea hourlyCompensationText;
 
 	private JComboBox<String> serviceComboBox;
-	
+
 	private ProviderGUI providerGui;
 	private ClientChatGUI clientChatGUI;
 	private ProviderChatGUI providerChatGUI;
@@ -47,8 +48,8 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private GUIAgent guiAgent;
 
 	public SignUpGUI(GUIAgent guiAgent) {
-		
-		this.guiAgent= guiAgent;
+
+		this.guiAgent = guiAgent;
 
 		overall = new JPanel();
 		total = new JPanel();
@@ -101,7 +102,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 
 		overall.add(keywords);
 		overall.add(keywordsText);
-		
+
 		overall.add(hourlyCompensation);
 		overall.add(hourlyCompensationText);
 
@@ -149,21 +150,35 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				logoText.setEditable(true);
 				keywordsText.setEditable(true);
 			}
-			
 
 		}
 
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
-			this.guiAgent.createProviderAgent();
-			//providerGui = new ProviderGUI();
+			// this.guiAgent.createProviderAgent();
+			// providerGui = new ProviderGUI();
 //			clientChatGUI = new ClientChatGUI();
 //			providerChatGUI = new ProviderChatGUI();
 //			providerFeedbackGUI = new ProviderFeedbackGUI();
 //			clientFeedbackGUI = new ClientFeedbackGUI();
 //			providerProjectGUI = new ProviderProjectGUI();
 //			clientProjectGUI = new ClientProjectGUI();	
-			
+
+			String value = serviceComboBox.getSelectedItem().toString();
+			if (value.contentEquals("Client")) {
+				System.out.println("It is a client");
+				this.guiAgent.createCustomerAgent(nameText.getText(), passwordText.getText());
+			} else {
+				System.out.println("It is a provider");
+				Double compensation = Double.parseDouble(hourlyCompensationText.getText());
+				ArrayList<String> keywordsArray = new ArrayList<String>(); 
+						String[] data = keywordsText.getText().split(",");
+				for (String i : data)
+					keywordsArray.add(i);
+				this.guiAgent.createProviderAgent(nameText.getText(), passwordText.getText(), websiteText.getText(),
+						logoText.getText(), compensation, keywordsArray, resumeText.getText());
+			}
+
 		}
 	}
 
