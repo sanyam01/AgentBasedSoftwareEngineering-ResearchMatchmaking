@@ -2,6 +2,8 @@ package matchpackage.database;
 
 import java.util.ArrayList;
 
+import jade.core.AID;
+
 public class Provider extends Customer {
 
 	private String website;
@@ -13,6 +15,7 @@ public class Provider extends Customer {
 	private String plan;
 	private ArrayList<String> approvals;
 	private ArrayList<String> projects;
+	//private AID providerAID;
 
 	Provider(String name, String password, String website, String logo, double compensation, String icon,
 			ArrayList<String> keywords, String resume, String plan) {
@@ -24,14 +27,41 @@ public class Provider extends Customer {
 		setKeywords(keywords);
 		setResume(resume);
 		setPlan(plan);
+		approvals = new ArrayList<String>();
+		projects = new ArrayList<String>();
 
 	}
+	
+//	public void setAID(AID aid) {
+//		this.providerAID = aid;
+//	}
 
 	public String getStringProvider() {
-		String attributeList = this.getName() + " " + this.website + " " + this.logo + " " + this.compensation + " "
-				+ this.icon + " " + this.resume + " " + this.plan;
+		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.compensation
+				+ "*" + this.icon + "*" + this.resume + "*" + this.plan;
 		return attributeList;
 	}
+
+	public String getStringProviderGuest() {
+
+		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords()
+				+ "*" + this.resume;
+
+		return attributeList;
+
+	}
+	
+	public void addApproval(String approval) {
+		approvals.add(approval);
+		
+	}
+	
+	public void addProject(String project) {
+		approvals.add(project);
+		
+	}
+	
+	
 
 	public ArrayList<String> getApprovals() {
 		return approvals;

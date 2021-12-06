@@ -1,4 +1,4 @@
-package matchpackage.access;
+package matchpackage.application;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -44,8 +44,11 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private ProviderFeedbackGUI providerFeedbackGUI;
 	private ProviderProjectGUI providerProjectGUI;
 	private ClientProjectGUI clientProjectGUI;
+	private GUIAgent guiAgent;
 
-	public SignUpGUI() {
+	public SignUpGUI(GUIAgent guiAgent) {
+		
+		this.guiAgent= guiAgent;
 
 		overall = new JPanel();
 		total = new JPanel();
@@ -110,6 +113,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 		setTitle("Sign up Interface");
 		setSize(400, 400);
 		setVisible(true);
+		System.out.println("This is sign up graphical user interface");
 
 	}
 
@@ -151,13 +155,15 @@ public class SignUpGUI extends JFrame implements ActionListener {
 
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
-			providerGui = new ProviderGUI();
-			clientChatGUI = new ClientChatGUI();
-			providerChatGUI = new ProviderChatGUI();
-			providerFeedbackGUI = new ProviderFeedbackGUI();
-			clientFeedbackGUI = new ClientFeedbackGUI();
-			providerProjectGUI = new ProviderProjectGUI();
-			clientProjectGUI = new ClientProjectGUI();			
+			this.guiAgent.createProviderAgent();
+			//providerGui = new ProviderGUI();
+//			clientChatGUI = new ClientChatGUI();
+//			providerChatGUI = new ProviderChatGUI();
+//			providerFeedbackGUI = new ProviderFeedbackGUI();
+//			clientFeedbackGUI = new ClientFeedbackGUI();
+//			providerProjectGUI = new ProviderProjectGUI();
+//			clientProjectGUI = new ClientProjectGUI();	
+			
 		}
 	}
 

@@ -1,4 +1,4 @@
-package matchpackage.access;
+package matchpackage.application;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -54,6 +54,8 @@ public class LoginGUI extends JFrame implements ActionListener {
 			setTitle("Login Interface");
 			setSize(300, 300);
 			setVisible(true);
+			System.out.println("This is login graphical user interface");
+
 
 		}
 

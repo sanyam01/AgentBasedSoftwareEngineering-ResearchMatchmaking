@@ -20,6 +20,7 @@ public class SearchAgent extends Agent {
 	}
 
 	private class SortProviders extends CyclicBehaviour {
+		
 
 		private int step = 0;
 
@@ -29,9 +30,12 @@ public class SearchAgent extends Agent {
 
 			ACLMessage msg = myAgent.blockingReceive();
 			System.out.println(msg);
+			
+			
 			ACLMessage reply = msg.createReply();
+			
 
-			reply.setContent("Yup its working" + new SortProvidersList(msg.getContent()).sortProvidersList());
+			reply.setContent(new SortProvidersList(msg.getContent()).sortProvidersList());
 			send(reply);
 
 		}

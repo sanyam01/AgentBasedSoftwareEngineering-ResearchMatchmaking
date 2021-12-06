@@ -46,6 +46,23 @@ public class ProviderList {
 		for (Provider i : providers) {
 			providersStringList = providersStringList + i.getStringProvider() + "\n";
 		}
+		return providersStringList;
+	}
+
+	public String getStringProvidersGuest() {
+		String providersStringList = "";
+		for (Provider i : providers) {
+			providersStringList = providersStringList + i.getStringProviderGuest() + "\n";
+		}
+
+		return providersStringList;
+	}
+	
+	public String getStringProvidersGuest(ArrayList<Provider> newList) {
+		String providersStringList = "";
+		for (Provider i : newList) {
+			providersStringList = providersStringList + i.getStringProviderGuest() + "\n";
+		}
 
 		return providersStringList;
 	}

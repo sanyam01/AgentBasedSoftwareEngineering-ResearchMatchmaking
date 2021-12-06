@@ -1,4 +1,4 @@
-package matchpackage.access;
+package matchpackage.application;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;

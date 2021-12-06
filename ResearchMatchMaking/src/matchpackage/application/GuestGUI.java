@@ -7,10 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import jade.core.behaviours.OneShotBehaviour;
-import matchpackage.access.LoginGUI;
-import matchpackage.access.SignUpGUI;
 
 public class GuestGUI extends JFrame implements ActionListener {
 
@@ -23,10 +22,14 @@ public class GuestGUI extends JFrame implements ActionListener {
 	private JButton loginButton;
 	private JTextArea enterKeywords;
 	private JButton searchButton;
+	private JScrollPane scrollProviders;
+	private JTable providerTable;
+	DefaultTableModel tableModel;
 
 	private GUIAgent guiAgent;
 	private SignUpGUI signUpGui;
 	private LoginGUI loginGUI;
+	String[] columnNames = { "Name", "Website", "Logo", "Resume", "Keywords" };
 
 	public GuestGUI(GUIAgent guiAgent) {
 
@@ -41,8 +44,7 @@ public class GuestGUI extends JFrame implements ActionListener {
 		signupButton = new JButton("Sign up");
 		loginButton.addActionListener(this);
 		signupButton.addActionListener(this);
-		loginButton.addActionListener(this);
-		signupButton.addActionListener(this);
+		
 
 		topPanel.add(welcomeLabel);
 		topPanel.add(loginButton);
@@ -56,11 +58,15 @@ public class GuestGUI extends JFrame implements ActionListener {
 		subJPanel.add(enterKeywords, "West");
 		subJPanel.add(searchButton, "East");
 
-		listProviders = new JTextArea("This is the list Sanyam", 10, 40);
+		listProviders = new JTextArea(10, 40);
+		providerTable = new JTable();
+		tableModel = (DefaultTableModel) providerTable.getModel();
+		tableModel.setColumnIdentifiers(columnNames);
+		scrollProviders = new JScrollPane(providerTable);
 
 		jPanel.add(topPanel, "North");
 		jPanel.add(subJPanel, "Center");
-		jPanel.add(listProviders, "South");
+		jPanel.add(scrollProviders, "South");
 
 		getContentPane().add(jPanel);
 		setSize(500, 500);
@@ -82,10 +88,10 @@ public class GuestGUI extends JFrame implements ActionListener {
 
 		if (e.getSource() == signupButton) {
 
-			signUpGui = new SignUpGUI();
+			signUpGui = new SignUpGUI(this.guiAgent);
 
 		}
-		
+
 		if (e.getSource() == loginButton) {
 			loginGUI = new LoginGUI();
 		}
@@ -101,9 +107,30 @@ public class GuestGUI extends JFrame implements ActionListener {
 	}
 
 	public void setContentListProvider(String content) {
+		
+		tableModel.setRowCount(0);
+		tableModel.fireTableDataChanged();
 
-		listProviders.setText(content);
+		String[] listRows = content.split("\n");
+
+		int numRows = (int) listRows.length;
+
+		String[][] providerData = new String[numRows][5];
+
+		for (int i = 0; i < numRows; i++) {
+			String[] data = listRows[i].split("\\*");
+			for (int j = 0; j < 5; j++) {
+				providerData[i][j] = data[j];
+			}
+			
+			tableModel.addRow(data);
+			
+		}
+
+		tableModel.fireTableDataChanged();
+		
 		System.out.println("I am getting the content to set " + content);
+		providerTable.repaint();
 
 	}
 

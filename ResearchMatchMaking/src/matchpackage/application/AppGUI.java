@@ -33,10 +33,8 @@ public class AppGUI extends JFrame implements ActionListener {
 		System.out.println("Yes! This button has been clicked.");
 		guestGUI = new GuestGUI(guiAgent);
 		guiAgent.setStep(1);
-		System.out.println("I have done the value 1");
 		
 		
-		// TODO Auto-generated method stub
 
 	}
 	
