@@ -67,12 +67,6 @@ public class GUIAgent extends EnhancedAgent {
 		addBehaviour(new SendListProvidersCustomer());
 
 	}
-//	public void callSearchKeywords(String keywords) {
-//		// TODO Auto-generated method stub
-//		System.out.println("I am reaching in method in GUI Agent 5");
-//		addBehaviour(new getListProviders(keywords));
-//
-//	}
 
 	public void createCustomerAgent(String name, String password) {
 		Customer customer = new Customer(name, password);
@@ -83,9 +77,10 @@ public class GUIAgent extends EnhancedAgent {
 	}
 
 	public void createProviderAgent(String name, String password, String website, String logo, double compensation,
-			ArrayList<String> keywords, String resume) {
+			ArrayList<String> keywords, String resume, String plan) {
 
 		Provider provider = new Provider(name, password, website, logo, compensation, keywords, resume);
+		provider.setPlan(plan);
 		providerList.addProvider(provider);
 		AID providerAID = createAgentAID(name, "matchpackage.access.ProviderAgent");
 		register("Web_services", providerAID);
@@ -95,8 +90,7 @@ public class GUIAgent extends EnhancedAgent {
 	public void showCustomerProviderGUI(String name) {
 
 		addBehaviour(new ShowGUICustomerProvider(name));
-		// this.step = 3;
-		// addBehaviour(new getListProviders(""));
+		
 	}
 
 	public void setGuestProviders() {

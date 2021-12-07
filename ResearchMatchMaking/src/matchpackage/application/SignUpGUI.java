@@ -27,6 +27,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JLabel hourlyCompensation;
 	private JButton submit;
 	private JPanel header, bottom, overall, total;
+	private JLabel planLabel;
 
 	private JTextArea nameText;
 	private JTextArea passwordText;
@@ -35,8 +36,13 @@ public class SignUpGUI extends JFrame implements ActionListener {
 	private JTextArea logoText;
 	private JTextArea keywordsText;
 	private JTextArea hourlyCompensationText;
+	private JTextArea contractText;
+
+	private JComboBox<String> planComboBox;
 
 	private JComboBox<String> serviceComboBox;
+
+	private JComboBox<String> contractComboBox;
 
 	private ProviderGUI providerGui;
 	private ClientChatGUI clientChatGUI;
@@ -75,13 +81,24 @@ public class SignUpGUI extends JFrame implements ActionListener {
 		logoText = new JTextArea("");
 		keywordsText = new JTextArea("");
 		hourlyCompensationText = new JTextArea("");
+		contractText = new JTextArea("");
 
 		String[] choices = { "Provider", "Client" };
+
+		String[] choicesPlan = { "Basic", "Premium" };
+
+		String[] contractOption = { "Accept", "Reject" };
+
+		planLabel = new JLabel("Please choose the plan");
+		planComboBox = new JComboBox<String>(choicesPlan);
+
+		contractComboBox = new JComboBox<String>(contractOption);
+		contractComboBox.addActionListener(this);
 
 		serviceComboBox = new JComboBox<String>(choices);
 		serviceComboBox.addActionListener(this);
 
-		overall.setLayout(new GridLayout(8, 2, 1, 1));
+		overall.setLayout(new GridLayout(10, 2, 1, 1));
 		overall.add(name);
 		overall.add(nameText);
 
@@ -105,6 +122,12 @@ public class SignUpGUI extends JFrame implements ActionListener {
 
 		overall.add(hourlyCompensation);
 		overall.add(hourlyCompensationText);
+
+		overall.add(planLabel);
+		overall.add(planComboBox);
+
+		overall.add(contractText);
+		overall.add(contractComboBox);
 
 		total.add(headerLabel);
 		total.add(overall);
@@ -136,6 +159,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				websiteText.setEditable(false);
 				logoText.setEditable(false);
 				keywordsText.setEditable(false);
+				planComboBox.setEditable(false);
 			}
 
 			if (x.equals("Provider")) {
@@ -149,30 +173,49 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				websiteText.setEditable(true);
 				logoText.setEditable(true);
 				keywordsText.setEditable(true);
+				planComboBox.setEditable(true);
 			}
 
 		}
 
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
-			
 
 			String value = serviceComboBox.getSelectedItem().toString();
+
+			if (value.contentEquals("Provider")) {
+
+				contractText.setText("Please accept the contract");
+			}
+			else {
+				this.guiAgent.createCustomerAgent(nameText.getText(), passwordText.getText());
+			}
+		}
+
+		if (e.getSource() == contractComboBox) {
+
+			String value = serviceComboBox.getSelectedItem().toString();
+
+			String valueContract = contractComboBox.getSelectedItem().toString();
+			if (valueContract.contentEquals("Reject")) {
+				value = "Client";
+			}
+
+			String valuePlan = planComboBox.getSelectedItem().toString();
 			if (value.contentEquals("Client")) {
 				System.out.println("It is a client");
 				this.guiAgent.createCustomerAgent(nameText.getText(), passwordText.getText());
 			} else {
 				System.out.println("It is a provider");
 				Double compensation = Double.parseDouble(hourlyCompensationText.getText());
-				ArrayList<String> keywordsArray = new ArrayList<String>(); 
-						String[] data = keywordsText.getText().split(",");
+				ArrayList<String> keywordsArray = new ArrayList<String>();
+				String[] data = keywordsText.getText().split(",");
 				for (String i : data)
 					keywordsArray.add(i);
 				this.guiAgent.createProviderAgent(nameText.getText(), passwordText.getText(), websiteText.getText(),
-						logoText.getText(), compensation, keywordsArray, resumeText.getText());
+						logoText.getText(), compensation, keywordsArray, resumeText.getText(), valuePlan);
 			}
 
 		}
 	}
-
 }

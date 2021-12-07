@@ -15,7 +15,6 @@ public class Provider extends Customer {
 	private String plan = "";
 	private ArrayList<String> approvals;
 	private ArrayList<String> projects;
-	// private AID providerAID;
 
 	public Provider(String name, String password, String website, String logo, double compensation,
 			ArrayList<String> keywords, String resume) {
@@ -31,20 +30,18 @@ public class Provider extends Customer {
 
 	}
 
-//	public void setAID(AID aid) {
-//		this.providerAID = aid;
-//	}
+
 
 	public String getStringProvider() {
 		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords() + "*"
-				+ this.resume + "*" + this.compensation;
+				+ this.resume + "*" + this.compensation + "*" + plan;
 		return attributeList;
 	}
 
 	public String getStringProviderGuest() {
 
 		String attributeList = this.getName() + "*" + this.website + "*" + this.logo + "*" + this.getKeywords() + "*"
-				+ this.resume;
+				+ this.resume + "*" + plan;
 
 		return attributeList;
 
