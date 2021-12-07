@@ -33,7 +33,7 @@ public class CustomerAgent extends EnhancedAgent {
 
 	protected void setup() {
 		customerGUI = new CustomerGUI(this);
-		addBehaviour(new ShowGUICustomer(this, 3000));
+		addBehaviour(new ShowGUICustomer(this, 10000));
 		providerListNew = new ProviderList();
 
 	}
@@ -41,13 +41,13 @@ public class CustomerAgent extends EnhancedAgent {
 	public void setKeywords(String words) {
 
 		this.keywords = words;
-		addBehaviour(new DisplaySortProviders(this, 3000));
+		addBehaviour(new DisplaySortProviders(this, 10000));
 		render = 1;
 
 	}
 
 	private class DisplaySortProviders extends TickerBehaviour {
-		
+
 		String displayProviders = "";
 
 		DisplaySortProviders(Agent a, long period) {
@@ -58,7 +58,6 @@ public class CustomerAgent extends EnhancedAgent {
 
 		@Override
 		protected void onTick() {
-
 
 			sortedProviders = new ArrayList<Provider>();
 			leftProviders = new ArrayList<Provider>();
@@ -88,7 +87,7 @@ public class CustomerAgent extends EnhancedAgent {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					//customerGUI.setTextContract(displayProviders);
+					// customerGUI.setTextContract(displayProviders);
 					customerGUI.setContentListProvider(displayProviders);
 
 					customerGUI.getProviderTable().repaint();
@@ -159,7 +158,7 @@ public class CustomerAgent extends EnhancedAgent {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
-							//customerGUI.setTextContract(msgGetProvider.getContent());
+							// customerGUI.setTextContract(msgGetProvider.getContent());
 							customerGUI.setContentListProvider(msgGetProvider.getContent());
 
 							customerGUI.getProviderTable().repaint();
@@ -204,4 +203,37 @@ public class CustomerAgent extends EnhancedAgent {
 
 	}
 
-}
+	public void placeBid(String providerName, Double bidValues) {
+
+		addBehaviour(new SendBidData(providerName, bidValues));
+
+	}
+
+	private class SendBidData extends OneShotBehaviour {
+	
+	
+		
+		String providerBidName;
+		double providerBidValue;
+
+		SendBidData(String value, double bidValue) {
+			
+			this.providerBidName = value;
+			this.providerBidValue = bidValue;
+		}
+
+		@Override
+		public void action() {
+			// TODO Auto-generated method stub
+			
+			ACLMessage bidMsg = new ACLMessage(ACLMessage.PROPOSE);
+			bidMsg.addReceiver(new AID(providerBidName, AID.ISLOCALNAME));
+			bidMsg.setContent(Double.toString(providerBidValue));
+			send(bidMsg);
+			
+		}
+	}
+		
+		
+	}
+

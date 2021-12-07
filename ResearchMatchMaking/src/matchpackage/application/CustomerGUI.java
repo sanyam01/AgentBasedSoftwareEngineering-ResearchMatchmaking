@@ -146,8 +146,15 @@ public class CustomerGUI extends JFrame implements ActionListener {
 			
 		}
 		
-		if(e.getSource() == bidButton)
+		if(e.getSource() == bidButton) {
 			System.out.println(providerTable.getValueAt(selectedRow, 0));
+			String providerName = providerTable.getValueAt(selectedRow, 0).toString();
+			String bidValue = bidValueArea.getText();
+			Double bidValues = Double.parseDouble(bidValue);
+		    customerAgent.placeBid (providerName, bidValues);
+		}
+		
+		
 
 	}
 	
