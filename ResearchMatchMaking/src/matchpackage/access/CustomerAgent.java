@@ -1,5 +1,7 @@
 package matchpackage.access;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
@@ -14,17 +16,87 @@ import jade.lang.acl.ACLMessage;
 import matchpackage.application.CustomerGUI;
 import matchpackage.application.EnhancedAgent;
 import matchpackage.database.Customer;
+import matchpackage.database.Provider;
+import matchpackage.database.ProviderList;
 
 public class CustomerAgent extends EnhancedAgent {
 
 	CustomerGUI customerGUI;
 	Set<AID> foundAgents;
 	int check = 0;
+	String keywords = "";
+	String providers = "";
+	ProviderList providerListNew;
+	private ArrayList<Provider> sortedProviders;
+	private ArrayList<Provider> leftProviders;
+	private int render = 0;
 
 	protected void setup() {
-		customerGUI = new CustomerGUI();
+		customerGUI = new CustomerGUI(this);
 		addBehaviour(new ShowGUICustomer(this, 3000));
+		providerListNew = new ProviderList();
 
+	}
+
+	public void setKeywords(String words) {
+
+		this.keywords = words;
+		addBehaviour(new DisplaySortProviders(this, 3000));
+		render = 1;
+
+	}
+
+	private class DisplaySortProviders extends TickerBehaviour {
+		
+		String displayProviders = "";
+
+		DisplaySortProviders(Agent a, long period) {
+
+			super(a, period);
+
+		}
+
+		@Override
+		protected void onTick() {
+
+
+			sortedProviders = new ArrayList<Provider>();
+			leftProviders = new ArrayList<Provider>();
+
+			String[] kewywordsSplitArray1 = keywords.split(",");
+			ArrayList<String> keywordsSplit1 = new ArrayList<String>();
+
+			for (String i : kewywordsSplitArray1) {
+				keywordsSplit1.add(i);
+			}
+
+			for (Provider provider : providerListNew.getProviders()) {
+
+				ArrayList<String> dataKeywords1 = provider.getKeywords();
+
+				if (!(Collections.disjoint(dataKeywords1, keywordsSplit1)))
+					sortedProviders.add(provider);
+				else
+					leftProviders.add(provider);
+
+			}
+
+			sortedProviders.addAll(leftProviders);
+
+			displayProviders = providerListNew.getStringProviders(sortedProviders);
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					//customerGUI.setTextContract(displayProviders);
+					customerGUI.setContentListProvider(displayProviders);
+
+					customerGUI.getProviderTable().repaint();
+
+				}
+			});
+
+		}
 	}
 
 	public void showGUI() {
@@ -55,8 +127,8 @@ public class CustomerAgent extends EnhancedAgent {
 
 					}
 				});
+				check = 1;
 
-				check = check + 1;
 				break;
 
 			case 1:
@@ -77,20 +149,53 @@ public class CustomerAgent extends EnhancedAgent {
 				System.out.println("This is in case 1 of customer agent");
 				System.out.println(msgGetProvider.getContent());
 				System.out.println("Yes I am updating the table");
-				customerGUI.setContentListProvider(msgGetProvider.getContent());
-				customerGUI.getProviderTable().repaint();
-				
-				
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						
-						
-						customerGUI.getProviderTable().repaint();
+				providers = msgGetProvider.getContent();
 
-					}
-				});
-				
+				if (render == 0) {
+					customerGUI.setTextContract(msgGetProvider.getContent());
+					customerGUI.setContentListProvider(msgGetProvider.getContent());
+					customerGUI.getProviderTable().repaint();
+
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							//customerGUI.setTextContract(msgGetProvider.getContent());
+							customerGUI.setContentListProvider(msgGetProvider.getContent());
+
+							customerGUI.getProviderTable().repaint();
+
+						}
+					});
+				}
+
+				String allProviders = msgGetProvider.getContent();
+				providerListNew = new ProviderList();
+				ArrayList<Provider> newUpdatedProviders = new ArrayList<Provider>();
+
+				String[] rowsDummy = allProviders.split("\n");
+				int rowNum = 0;
+				for (String i : rowsDummy) {
+					rowNum = rowNum + 1;
+					String[] column = i.split("\\*");
+					Double comp = Double.parseDouble(column[5]);
+					String listKeywordsProviderDummy = column[3];
+					listKeywordsProviderDummy = listKeywordsProviderDummy.substring(1,
+							listKeywordsProviderDummy.length() - 1);
+					String[] finalKeywordProvider = listKeywordsProviderDummy.split(",");
+					ArrayList<String> listKeywordsProvidersDummy = new ArrayList<String>();
+					for (String j : finalKeywordProvider)
+						listKeywordsProvidersDummy.add(j);
+					Provider provider = new Provider(column[0], "dummmy", column[1], column[2], comp,
+							listKeywordsProvidersDummy, column[4]);
+					newUpdatedProviders.add(provider);
+
+				}
+
+				providerListNew.setProviders(newUpdatedProviders);
+				System.out.println("Checking out the providers");
+
+				System.out.println(providerListNew.getStringProviders());
+
 				break;
 
 			}

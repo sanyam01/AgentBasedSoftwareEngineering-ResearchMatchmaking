@@ -12,9 +12,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import matchpackage.access.CustomerAgent;
+
 public class CustomerGUI extends JFrame implements ActionListener {
+	
+	private CustomerAgent customerAgent;
+	private int selectedProvider;
 
 	private JPanel overallPanel, firstPanel, secondPanel, thirdPanel;
 	private JPanel fourthPanel, fifthPanel, buttonPanel;
@@ -39,8 +47,12 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	private JTextArea contractArea;
 	private JButton acceptContractButton;
 	private JButton rejectContractButton;
+	private int selectedRow;
+	private String providerName;
 
-	public CustomerGUI() {
+	public CustomerGUI(CustomerAgent customerAgent) {
+		
+		this.customerAgent = customerAgent;
 
 		overallPanel = new JPanel();
 		firstPanel = new JPanel();
@@ -58,6 +70,7 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		enterKeywords = new JLabel("Enter keywords");
 		keywordsArea = new JTextArea("");
 		searchButton = new JButton("Search");
+		searchButton.addActionListener(this);
 
 		firstPanel.add(enterKeywords);
 		firstPanel.add(keywordsArea);
@@ -68,11 +81,29 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		tableModel = (DefaultTableModel) providerTable.getModel();
 		tableModel.setColumnIdentifiers(columnNames);
 		scrollProviders = new JScrollPane(providerTable);
-		// JScrollPane scrollPaneList = new JScrollPane(listProviders);
+		
+		ListSelectionModel model = providerTable.getSelectionModel();
+		
+		model.addListSelectionListener(new ListSelectionListener() {
 
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				if(!(model.isSelectionEmpty()))
+				   selectedRow = model.getMinSelectionIndex();
+				System.out.println(model.toString());
+				System.out.println("Row has been selected........................");
+				System.out.println("Row no is " + selectedRow);
+				selectedProvider = selectedRow;
+					
+			}
+			
+		});
+		
 		bidValue = new JLabel("Enter bid value");
 		bidValueArea = new JTextArea(10, 20);
 		bidButton = new JButton("Submit Bid");
+		bidButton.addActionListener(this);
 
 		secondPanel.add(bidValue);
 		secondPanel.add(bidValueArea);
@@ -108,8 +139,20 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		if(e.getSource() == searchButton) {
+			String keywords = keywordsArea.getText();
+			customerAgent.setKeywords(keywords);
+			
+		}
+		
+		if(e.getSource() == bidButton)
+			System.out.println(providerTable.getValueAt(selectedRow, 0));
 
 	}
+	
+	
+	
 
 	public void showGUI() {
 		this.setVisible(true);
@@ -138,9 +181,10 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		tableModel.fireTableDataChanged();
 
 		System.out.println("I am getting the content to set " + content);
-		providerTable.repaint();
+		//providerTable.repaint();
 
 	}
+	
 	
 	public void tableRepaint() {
 		//providerTable.repaint();
@@ -150,5 +194,11 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	public JTable getProviderTable() {
 		return providerTable;
 	}
+	
+	public void setTextContract(String content) {
+		contractArea.setText(content);
+	}
+
+	
 
 }

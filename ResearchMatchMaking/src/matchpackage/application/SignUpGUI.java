@@ -155,14 +155,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 
 		if (e.getSource() == submit) {
 			System.out.println("Submit button has been clicked");
-			// this.guiAgent.createProviderAgent();
-			// providerGui = new ProviderGUI();
-//			clientChatGUI = new ClientChatGUI();
-//			providerChatGUI = new ProviderChatGUI();
-//			providerFeedbackGUI = new ProviderFeedbackGUI();
-//			clientFeedbackGUI = new ClientFeedbackGUI();
-//			providerProjectGUI = new ProviderProjectGUI();
-//			clientProjectGUI = new ClientProjectGUI();	
+			
 
 			String value = serviceComboBox.getSelectedItem().toString();
 			if (value.contentEquals("Client")) {

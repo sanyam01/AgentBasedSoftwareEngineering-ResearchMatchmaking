@@ -27,6 +27,8 @@ public class ProviderList {
 		providers.add(pro1);
 		providers.add(pro2);
 	}
+	
+	
 
 	public void addProvider(Provider pro) {
 		providers.add(pro);
@@ -66,4 +68,14 @@ public class ProviderList {
 
 		return providersStringList;
 	}
+	
+	public String getStringProviders(ArrayList<Provider> newList) {
+		String providersStringList = "";
+		for (Provider i : newList) {
+			providersStringList = providersStringList + i.getStringProvider() + "\n";
+		}
+
+		return providersStringList;
+	}
+	
 }

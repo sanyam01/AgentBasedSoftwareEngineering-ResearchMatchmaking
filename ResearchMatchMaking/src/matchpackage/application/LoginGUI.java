@@ -70,7 +70,7 @@ public class LoginGUI extends JFrame implements ActionListener {
 			if (e.getSource() == submit) {
 				System.out.println("Submit Login button has been clicked");
 				guiAgent.showCustomerProviderGUI(nameText.getText());
-				//guiAgent.setStep(3);
+				
 		
 				
 				

@@ -55,19 +55,17 @@ public class GUIAgent extends EnhancedAgent {
 
 		createAgent("Access", "matchpackage.access.AccessAgent");
 		createAgent("Search", "matchpackage.search.SearchAgent");
-		
+
 		customerList = new CustomerList();
 		providerList = new ProviderList();
-		
+
 		addBehaviour(new getListProviders());
-		
-		
-		
+
 	}
 
 	public void runAfterLogin() {
 		addBehaviour(new SendListProvidersCustomer());
-		
+
 	}
 //	public void callSearchKeywords(String keywords) {
 //		// TODO Auto-generated method stub
@@ -97,17 +95,16 @@ public class GUIAgent extends EnhancedAgent {
 	public void showCustomerProviderGUI(String name) {
 
 		addBehaviour(new ShowGUICustomerProvider(name));
-		//this.step = 3;
-		//addBehaviour(new getListProviders(""));
+		// this.step = 3;
+		// addBehaviour(new getListProviders(""));
 	}
-	
+
 	public void setGuestProviders() {
-		
+
 		appGUI.getGuestGUI().setContentListProvider(providerList.getStringProvidersGuest() + "\n");
-		
+
 	}
-	
-	
+
 	public class ShowGUICustomerProvider extends OneShotBehaviour {
 
 		String name;
@@ -125,13 +122,12 @@ public class GUIAgent extends EnhancedAgent {
 			msg.setContent("Open GUI");
 			send(msg);
 			step = 3;
-			
 
 		}
 
 	}
-	
-	public class SendListProvidersCustomer extends CyclicBehaviour{
+
+	public class SendListProvidersCustomer extends CyclicBehaviour {
 
 		@Override
 		public void action() {
@@ -145,21 +141,16 @@ public class GUIAgent extends EnhancedAgent {
 				System.out.println("I am in case 3 GUI agent");
 
 				System.out.println(msgGetProvider);
-				
+
 			}
-			
+
 		}
-		
+
 	}
 
-	public class getListProviders extends Behaviour implements Runnable {
+	public class getListProviders extends Behaviour {
 
 		String keywords = "";
-
-//		private getListProviders(String words) {
-//			this.keywords = words;
-//
-//		}
 
 		@Override
 		public void action() {
@@ -167,7 +158,7 @@ public class GUIAgent extends EnhancedAgent {
 			switch (step) {
 
 			case 2:
-				
+
 				keywords = appGUI.getGuestGUI().getStringKeyWords();
 				ACLMessage msgSearch = new ACLMessage(ACLMessage.REQUEST);
 				msgSearch.addReceiver(new AID("Search", AID.ISLOCALNAME));
@@ -190,12 +181,12 @@ public class GUIAgent extends EnhancedAgent {
 
 				System.out.println("I am back in case2");
 				step = 0;
-				
-				//bool = true;
+
+				// bool = true;
 				break;
 
 			case 3:
-				
+
 				ACLMessage msgGetProvider = myAgent.blockingReceive();
 				if (msgGetProvider.getContent().contentEquals("Get providers in Customer")) {
 
@@ -205,29 +196,23 @@ public class GUIAgent extends EnhancedAgent {
 					System.out.println("I am in case 3 GUI agent");
 
 					System.out.println(msgGetProvider);
-					
-					
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
 
-							appGUI.getGuestGUI().setContentListProvider(providerList.getStringProvidersGuest() + "\n");
-							
-						}
-					});
-					
-					
-					
-					
-					
 				}
+
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+
+						appGUI.getGuestGUI().setContentListProvider(providerList.getStringProvidersGuest() + "\n");
+
+					}
+				});
 				
-				setGuestProviders();
 				
+
 				break;
 
 			}
-					
 
 		}
 
@@ -236,12 +221,6 @@ public class GUIAgent extends EnhancedAgent {
 			// TODO Auto-generated method stub
 
 			return bool;
-
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
 
 		}
 
