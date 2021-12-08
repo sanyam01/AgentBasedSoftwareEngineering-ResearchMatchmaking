@@ -95,6 +95,8 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		contractText = new JTextArea("", 5, 30);
 		acceptContract = new JButton("Accept");
 		rejectContract = new JButton("Reject");
+		acceptContract.addActionListener(this);
+		rejectContract.addActionListener(this);
 
 		jPanel5.add(contract);
 		jPanel5.add(contractText);
@@ -119,15 +121,23 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 		if(e.getSource() == acceptBid) {
-			this.providerAgent.afterBidClick("Accept", providerAgent);
+			providerAgent.afterBidClick("Accept");
 		}
 		
 		if(e.getSource() == rejectBid) {
 			bidText.setText("");
-			providerAgent.afterBidClick("Reject", providerAgent);
-			System.out.println("I am running in this though");
+			providerAgent.afterBidClick("Reject");
+//			System.out.println("I am running in this though");
 		}
 		
+		if(e.getSource() == acceptContract) {
+			
+			providerAgent.afterContractClick("Accept");
+		}
+		
+		if(e.getSource() == rejectContract) {
+			providerAgent.afterContractClick("Reject");
+		}
 		
 
 	}
@@ -138,6 +148,10 @@ public class ProviderGUI extends JFrame implements ActionListener {
 
 	public void setBidText(String value) {
 		bidText.setText(value);
+	}
+	
+	public void setContract(String contract) {
+		contractText.setText(contract);
 	}
 
 }

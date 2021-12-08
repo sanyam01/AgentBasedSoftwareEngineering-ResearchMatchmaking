@@ -134,7 +134,7 @@ public class GUIAgent extends EnhancedAgent {
 				send(reply);
 				System.out.println("I am in case 3 GUI agent");
 
-				System.out.println(msgGetProvider);
+				//System.out.println(msgGetProvider);
 
 			}
 
@@ -160,7 +160,7 @@ public class GUIAgent extends EnhancedAgent {
 				msgSearch.setContent(keywords);
 				send(msgSearch);
 				ACLMessage msgResponse = myAgent.blockingReceive();
-				System.out.println(msgResponse);
+				//System.out.println(msgResponse);
 
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
@@ -189,7 +189,7 @@ public class GUIAgent extends EnhancedAgent {
 					send(reply);
 					System.out.println("I am in case 3 GUI agent");
 
-					System.out.println(msgGetProvider);
+					//System.out.println(msgGetProvider);
 
 				}
 

@@ -126,6 +126,8 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		contractArea = new JTextArea(10, 20);
 		acceptContractButton = new JButton("Accept Contract");
 		rejectContractButton = new JButton("Reject Contract");
+		acceptContractButton.addActionListener(this);
+		rejectContractButton.addActionListener(this);
 
 		buttonPanel.add(acceptContractButton);
 		buttonPanel.add(rejectContractButton);
@@ -179,20 +181,20 @@ public class CustomerGUI extends JFrame implements ActionListener {
 			Double bidValues = Double.parseDouble(bidValue);
 		   customerAgent.placeBid (providerName, bidValues);
 			
-			//customerAgent.startBidding(providerName, bidValues);
+			
 		}
 		
-		////Mingrui code..........................
-		///.......................................
-		///......................................
 		if (e.getSource()==acceptContractButton){
-			this.contractArea.setText("The contract has been accepted");
-			//ClientChatGUI clientGui = new ClientChatGUI();
+			
+			//this.contractArea.setText("The contract has been accepted");
+			customerAgent.afterAcceptingContract("ACCEPT");
 			
 		}
 
 		if (e.getSource()==rejectContractButton){
-			this.contractArea.setText("The contract has been rejected");
+			
+			//this.contractArea.setText("The contract has been rejected");
+			customerAgent.afterAcceptingContract("REJECT");
 		}
 		
 
