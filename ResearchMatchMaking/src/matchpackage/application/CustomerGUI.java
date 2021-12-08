@@ -1,5 +1,6 @@
 package matchpackage.application;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,7 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	private int selectedProvider;
 
 	private JPanel overallPanel, firstPanel, secondPanel, thirdPanel;
-	private JPanel fourthPanel, fifthPanel, buttonPanel;
+	private JPanel fourthPanel, fifthPanel, buttonPanel, sixthPanel;
 
 	private JLabel enterKeywords;
 	private JTextArea keywordsArea;
@@ -49,6 +50,13 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	private JButton rejectContractButton;
 	private int selectedRow;
 	private String providerName;
+	
+	//Adding mingrui Code...........
+	//..............................
+	private JButton trackingButton;
+	private JButton trackingAndFeedback;
+	private JButton ifChange;
+	private JTextArea changeText;
 
 	public CustomerGUI(CustomerAgent customerAgent) {
 		
@@ -60,9 +68,10 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		thirdPanel = new JPanel();
 		fourthPanel = new JPanel();
 		fifthPanel = new JPanel();
+		sixthPanel = new JPanel();
 		buttonPanel = new JPanel(new FlowLayout());
 
-		overallPanel.setLayout(new GridLayout(5, 1, 1, 1));
+		overallPanel.setLayout(new GridLayout(6, 1, 1, 1));
 		firstPanel.setLayout(new GridLayout(1, 3, 1, 1));
 		thirdPanel.setLayout(new GridLayout(1, 3, 1, 1));
 		fifthPanel.setLayout(new GridLayout(1, 3, 1, 1));
@@ -81,6 +90,8 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		tableModel = (DefaultTableModel) providerTable.getModel();
 		tableModel.setColumnIdentifiers(columnNames);
 		scrollProviders = new JScrollPane(providerTable);
+		
+		
 		
 		ListSelectionModel model = providerTable.getSelectionModel();
 		
@@ -122,12 +133,27 @@ public class CustomerGUI extends JFrame implements ActionListener {
 		thirdPanel.add(contract);
 		thirdPanel.add(contractArea);
 		thirdPanel.add(buttonPanel);
+		
+		//Mingrui Code............................
+		//........................................
+		
+		trackingAndFeedback = new JButton("trakingAndFeedback");
+		ifChange = new JButton("change?");
+		changeText= new JTextArea(10,20);
+		ifChange.addActionListener(this);
+		trackingAndFeedback.addActionListener(this);
+		
+		sixthPanel.add(trackingAndFeedback);
+		sixthPanel.add(ifChange);
+		sixthPanel.add(changeText);
+		sixthPanel.setBackground(Color.gray);
 
 		overallPanel.add(firstPanel);
 		overallPanel.add(scrollProviders);
 		overallPanel.add(secondPanel);
 		overallPanel.add(bidAcceptance);
 		overallPanel.add(thirdPanel);
+		overallPanel.add(sixthPanel);
 
 		getContentPane().add(overallPanel);
 		setTitle("Customer Interface");
@@ -151,14 +177,40 @@ public class CustomerGUI extends JFrame implements ActionListener {
 			String providerName = providerTable.getValueAt(selectedRow, 0).toString();
 			String bidValue = bidValueArea.getText();
 			Double bidValues = Double.parseDouble(bidValue);
-		    customerAgent.placeBid (providerName, bidValues);
+		   customerAgent.placeBid (providerName, bidValues);
+			
+			//customerAgent.startBidding(providerName, bidValues);
 		}
 		
+		////Mingrui code..........................
+		///.......................................
+		///......................................
+		if (e.getSource()==acceptContractButton){
+			this.contractArea.setText("The contract has been accepted");
+			//ClientChatGUI clientGui = new ClientChatGUI();
+			
+		}
+
+		if (e.getSource()==rejectContractButton){
+			this.contractArea.setText("The contract has been rejected");
+		}
 		
 
 	}
 	
+	public void showBidderStatus(String info){
+		bidAcceptance.setText(info);
+	}
+	public void showBiddingResults(String info){
+		this.contractArea.setText(info);
+	}
 	
+	public void showChangeResults(String info){
+		this.changeText.setText(info);
+	}
+	
+//////.........................................
+		//.............................................End
 	
 
 	public void showGUI() {
@@ -204,6 +256,10 @@ public class CustomerGUI extends JFrame implements ActionListener {
 	
 	public void setTextContract(String content) {
 		contractArea.setText(content);
+	}
+	
+	public void setBidValueArea(String content) {
+		bidValueArea.setText(content);
 	}
 
 	

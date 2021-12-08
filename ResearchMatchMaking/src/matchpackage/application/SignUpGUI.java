@@ -160,6 +160,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				logoText.setEditable(false);
 				keywordsText.setEditable(false);
 				planComboBox.setEditable(false);
+				contractComboBox.setEditable(false);
 			}
 
 			if (x.equals("Provider")) {
@@ -174,6 +175,7 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				logoText.setEditable(true);
 				keywordsText.setEditable(true);
 				planComboBox.setEditable(true);
+				contractComboBox.setEditable(true);
 			}
 
 		}
@@ -201,11 +203,11 @@ public class SignUpGUI extends JFrame implements ActionListener {
 				value = "Client";
 			}
 
-			String valuePlan = planComboBox.getSelectedItem().toString();
 			if (value.contentEquals("Client")) {
 				System.out.println("It is a client");
 				this.guiAgent.createCustomerAgent(nameText.getText(), passwordText.getText());
 			} else {
+				String valuePlan = planComboBox.getSelectedItem().toString();
 				System.out.println("It is a provider");
 				Double compensation = Double.parseDouble(hourlyCompensationText.getText());
 				ArrayList<String> keywordsArray = new ArrayList<String>();

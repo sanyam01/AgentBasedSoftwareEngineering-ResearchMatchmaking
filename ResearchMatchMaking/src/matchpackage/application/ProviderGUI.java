@@ -9,8 +9,11 @@ import java.awt.Container;
 
 import javax.swing.*;
 
+import matchpackage.access.ProviderAgent;
+
 public class ProviderGUI extends JFrame implements ActionListener {
 
+	private ProviderAgent providerAgent;
 	private JButton logOut;
 	private JTextArea listProviders;
 	private JComboBox<String> planComboBox;
@@ -22,7 +25,6 @@ public class ProviderGUI extends JFrame implements ActionListener {
 	private JLabel iconLabel;
 	private JScrollPane scrollPaneProviders;
 	private JTextArea verifiedIconLabel;
-	
 
 	private JLabel bids;
 	private JTextArea bidText;
@@ -36,9 +38,10 @@ public class ProviderGUI extends JFrame implements ActionListener {
 
 	private JPanel jPanel1, jPanel2, jPanel3, jPanel4, jPanel5, overallJPanel;
 
-	public ProviderGUI() {
-
+	public ProviderGUI(ProviderAgent providerAgent) {
 		
+		this.providerAgent = providerAgent;
+
 		jPanel1 = new JPanel(new FlowLayout());
 		jPanel2 = new JPanel(new FlowLayout());
 		jPanel3 = new JPanel(new FlowLayout());
@@ -48,13 +51,12 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		overallJPanel.setLayout(new BoxLayout(overallJPanel, BoxLayout.PAGE_AXIS));
 
 		listLabel = new JLabel("List of providers");
-		listProviders = new JTextArea(5,30);
+		listProviders = new JTextArea(5, 30);
 		logOut = new JButton("Log Out");
-		
+
 		scrollPaneProviders = new JScrollPane(listProviders);
 
-//		jPanel1.add(listLabel);
-//		jPanel1.add(scrollPaneProviders);
+
 		jPanel1.add(logOut);
 
 		String[] choices = { "Basic", "Premium" };
@@ -68,10 +70,9 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		jPanel2.add(submitPlan);
 
 		iconLabel = new JLabel("Please submit  verified proof of business");
-		verifiedIcon = new JTextArea("",5,30);
+		verifiedIcon = new JTextArea("", 5, 30);
 		submitIcon = new JButton("Submit Icon");
-		verifiedIconLabel = new JTextArea("",5,30);
-		
+		verifiedIconLabel = new JTextArea("", 5, 30);
 
 		jPanel3.add(iconLabel);
 		jPanel3.add(verifiedIcon);
@@ -79,9 +80,11 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		jPanel3.add(verifiedIconLabel);
 
 		bids = new JLabel("Bids");
-		bidText = new JTextArea("",5,30);
+		bidText = new JTextArea("", 5, 30);
 		acceptBid = new JButton("Accept");
 		rejectBid = new JButton("Reject");
+		acceptBid.addActionListener(this);
+		rejectBid.addActionListener(this);
 
 		jPanel4.add(bids);
 		jPanel4.add(bidText);
@@ -89,7 +92,7 @@ public class ProviderGUI extends JFrame implements ActionListener {
 		jPanel4.add(rejectBid);
 
 		contract = new JLabel("Contract");
-		contractText = new JTextArea("",5,30);
+		contractText = new JTextArea("", 5, 30);
 		acceptContract = new JButton("Accept");
 		rejectContract = new JButton("Reject");
 
@@ -106,20 +109,35 @@ public class ProviderGUI extends JFrame implements ActionListener {
 
 		getContentPane().add(overallJPanel);
 		setTitle("Provider Interface");
-		setSize(800, 800);
+		setSize(900, 900);
 		setVisible(false);
-		
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		if(e.getSource() == acceptBid) {
+			this.providerAgent.afterBidClick("Accept", providerAgent);
+		}
+		
+		if(e.getSource() == rejectBid) {
+			bidText.setText("");
+			providerAgent.afterBidClick("Reject", providerAgent);
+			System.out.println("I am running in this though");
+		}
+		
+		
 
 	}
-	
+
 	public void showGUI() {
 		this.setVisible(true);
+	}
+
+	public void setBidText(String value) {
+		bidText.setText(value);
 	}
 
 }
