@@ -97,6 +97,7 @@ public class BiddingAgent extends Agent {
 					System.out.println("Contracts have been accepted by both the users");
 					ACLMessage msgTrackerGUI = new ACLMessage(ACLMessage.REQUEST_WHENEVER);
 					msgTrackerGUI.addReceiver(new AID(providerName, AID.ISLOCALNAME));
+					msgTrackerGUI.addReceiver(new AID(customerName, AID.ISLOCALNAME));
 					send(msgTrackerGUI);
 
 				}

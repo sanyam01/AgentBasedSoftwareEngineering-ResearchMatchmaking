@@ -16,6 +16,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import matchpackage.application.CustomerGUI;
 import matchpackage.application.EnhancedAgent;
+import matchpackage.contract.ClientProjectGUI;
 import matchpackage.database.Customer;
 import matchpackage.database.Provider;
 import matchpackage.database.ProviderList;
@@ -30,9 +31,8 @@ public class CustomerAgent extends EnhancedAgent {
 	ProviderList providerListNew;
 	private ArrayList<Provider> sortedProviders;
 	private ArrayList<Provider> leftProviders;
+	private ClientProjectGUI clientProjectGUI;
 	private int render = 0;
-
-	
 
 	protected void setup() {
 
@@ -40,43 +40,62 @@ public class CustomerAgent extends EnhancedAgent {
 		providerListNew = new ProviderList();
 		addBehaviour(new ShowGUICustomer(this, 10000));
 
-		
+	}
+
+	public void afterAcceptingContract(String text) {
+
+		System.out.println("I am in One shot behaviour customer after accepting contract");
+		addBehaviour(new SendContractMessage(text, this));
 
 	}
-	
-	
-	public void afterAcceptingContract(String text) {
-		
-		System.out.println("I am in One shot behaviour customer after accepting contract");
-		addBehaviour(new SendContractMessage(text));
-		
-	}
-	
-	private class SendContractMessage extends OneShotBehaviour{
-		
-		
+
+	private class SendContractMessage extends OneShotBehaviour {
+
 		String contractDec;
-		
-		SendContractMessage(String dec){
+		Agent myAgent;
+
+		SendContractMessage(String dec, Agent a) {
+			this.myAgent = a;
 			this.contractDec = dec;
 		}
 
 		@Override
 		public void action() {
 			// TODO Auto-generated method stub
-			
+
 			System.out.println("Am i going in the send contract customer agent");
-			
+
 			ACLMessage msgContractDec = new ACLMessage(ACLMessage.INFORM);
 			msgContractDec.addReceiver(new AID("Bidding", AID.ISLOCALNAME));
 			msgContractDec.setContent(contractDec);
 			send(msgContractDec);
-			
+
+			addBehaviour(new ProjectTracker(myAgent, 10000));
+
 		}
-		
+
 	}
 
+	private class ProjectTracker extends TickerBehaviour {
 
+		public ProjectTracker(Agent a, long period) {
+			super(a, period);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void onTick() {
+			// TODO Auto-generated method stub
+			System.out.println("Project is on too");
+			ACLMessage startMsg = blockingReceive();
+			if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
+
+				clientProjectGUI = new ClientProjectGUI();
+			}
+
+		}
+
+	}
 
 	public void setKeywords(String words) {
 
@@ -171,9 +190,9 @@ public class CustomerAgent extends EnhancedAgent {
 				break;
 
 			case 1:
-				//System.out.println("I am in 1");
+				// System.out.println("I am in 1");
 				foundAgents = searchForService("Web_services");
-				//System.out.println(foundAgents);
+				// System.out.println(foundAgents);
 //				for (AID j : foundAgents) {
 //					System.out.println("Name of the agents are");
 //				}
@@ -191,7 +210,7 @@ public class CustomerAgent extends EnhancedAgent {
 				providers = msgGetProvider.getContent();
 
 				if (render == 0) {
-					//customerGUI.setTextContract(msgGetProvider.getContent());
+					// customerGUI.setTextContract(msgGetProvider.getContent());
 					customerGUI.setContentListProvider(msgGetProvider.getContent());
 					customerGUI.getProviderTable().repaint();
 
@@ -270,18 +289,18 @@ public class CustomerAgent extends EnhancedAgent {
 			send(bidMsg);
 
 			ACLMessage recMsg = blockingReceive();
-				System.out.println(recMsg.getPerformative());
-				if (recMsg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-					customerGUI.showBidderStatus(recMsg.getContent());
-					customerGUI.setBidValueArea("");
+			System.out.println(recMsg.getPerformative());
+			if (recMsg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+				customerGUI.showBidderStatus(recMsg.getContent());
+				customerGUI.setBidValueArea("");
 
 			}
-				
-				if (recMsg.getPerformative() == ACLMessage.PROPOSE) {
-					customerGUI.showBidderStatus("Bid has been accepted");
-					customerGUI.setTextContract(recMsg.getContent());
-					customerGUI.setBidValueArea("");
-				}
+
+			if (recMsg.getPerformative() == ACLMessage.PROPOSE) {
+				customerGUI.showBidderStatus("Bid has been accepted");
+				customerGUI.setTextContract(recMsg.getContent());
+				customerGUI.setBidValueArea("");
+			}
 		}
 	}
 
