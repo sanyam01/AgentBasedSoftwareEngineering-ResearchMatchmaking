@@ -1,4 +1,4 @@
-package matchpackage.tracker;
+package matchpackage.contract;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

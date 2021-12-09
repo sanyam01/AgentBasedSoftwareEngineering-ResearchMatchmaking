@@ -11,6 +11,8 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import matchpackage.application.EnhancedAgent;
 import matchpackage.application.ProviderGUI;
+import matchpackage.contract.ProviderChatGUI;
+import matchpackage.contract.ProviderProjectGUI;
 import matchpackage.database.Provider;
 
 public class ProviderAgent extends EnhancedAgent {
@@ -25,15 +27,43 @@ public class ProviderAgent extends EnhancedAgent {
 	int step = 0;
 	int caseVal = 0;
 	String contractDecision = "PENDING";
+	private ProviderProjectGUI providerProjectGUI;
+	private ProviderChatGUI providerChatGUI;
 
 	protected void setup() {
 		createAgent("Bidding", "matchpackage.contract.BiddingAgent");
 		providerGUI = new ProviderGUI(this);
 		System.out.printf("Hello! My name is %s%n", getLocalName());
+		//addBehaviour(new ProjectTracker(this, 2000));
 		addBehaviour(new ShowGUIProvider(this, 2000));
-		//addBehaviour(new SendBidDecisions());
+		// addBehaviour(new SendBidDecisions());
+
+		// addBehaviour(new chatMessenger());
 
 	}
+
+//	private class ProjectTracker extends TickerBehaviour {
+//
+//		public ProjectTracker(Agent a, long period) {
+//			super(a, period);
+//			// TODO Auto-generated constructor stub
+//		}
+//
+//		@Override
+//		protected void onTick() {
+//			// TODO Auto-generated method stub
+//			System.out.println("Project is on too");
+//			ACLMessage startMsg = blockingReceive();
+//			if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
+//
+//				providerProjectGUI = new ProviderProjectGUI();
+//			}
+//
+//		}
+//
+//	}
+
+	// private class ChatMessenger extends TicketBehaviour{
 
 	public void showGUI() {
 
@@ -48,7 +78,7 @@ public class ProviderAgent extends EnhancedAgent {
 //		check = 1;
 //		System.out.println("Value of check is  " + check);
 //		System.out.println("Value of decision is  " + decision);
-		
+
 		// this.madeBehaviour = new SendBidDecision();
 		// check = 1;
 		// addBehaviour(new SendBidDecision());
@@ -60,7 +90,6 @@ public class ProviderAgent extends EnhancedAgent {
 	public void afterContractClick(String text) {
 		contractDecision = text;
 	}
-
 
 	private class ShowGUIProvider extends TickerBehaviour {
 
@@ -123,7 +152,7 @@ public class ProviderAgent extends EnhancedAgent {
 					if (decision.contentEquals("Accept")) {
 						ACLMessage msgAccept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 						msgAccept.addReceiver(new AID("Bidding", AID.ISLOCALNAME));
-						//String sendContent = getAID().getLocalName() + "*" + customerName;
+						// String sendContent = getAID().getLocalName() + "*" + customerName;
 						msgAccept.setContent(customerName);
 						send(msgAccept);
 						caseVal = 3;
@@ -141,22 +170,22 @@ public class ProviderAgent extends EnhancedAgent {
 
 				}
 				break;
-				
+
 			case 3:
-				
+
 				ACLMessage msgContract = myAgent.blockingReceive();
-				if(msgContract != null) {
+				if (msgContract != null) {
 					if (msgContract.getPerformative() == ACLMessage.PROPOSE) {
 						providerGUI.setContract(msgContract.getContent());
 					}
 				}
-				
-			caseVal = 4;
-				
+
+				caseVal = 4;
+
 				break;
-				
+
 			case 4:
-				
+
 				if (!(contractDecision.contentEquals("PENDING"))) {
 
 					System.out.println("I am reaching in contract action of ProviderAgent");
@@ -166,9 +195,9 @@ public class ProviderAgent extends EnhancedAgent {
 						msgAcceptContract.addReceiver(new AID("Bidding", AID.ISLOCALNAME));
 						msgAcceptContract.setContent("ACCEPT");
 						send(msgAcceptContract);
-					contractDecision = "PENDING";
-					caseVal = 1;
-					decision = "PENDING";
+						contractDecision = "PENDING";
+						caseVal = 1;
+						decision = "PENDING";
 					}
 
 					if (decision.contentEquals("Reject")) {
@@ -177,22 +206,34 @@ public class ProviderAgent extends EnhancedAgent {
 						msgRejectContract.addReceiver(new AID("Bidding", AID.ISLOCALNAME));
 						msgRejectContract.setContent("REJECT");
 						send(msgRejectContract);
-						caseVal = 1;
+						caseVal = 5;
 						decision = "PENDING";
 						contractDecision = "PENDING";
 					}
+					
+					caseVal = 5;
 
 				}
-				
-				
+
 				break;
 
+			case 5:
+
+				System.out.println("Project is on too");
+				ACLMessage startMsg = blockingReceive();
+				if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
+
+					providerProjectGUI = new ProviderProjectGUI();
+					providerChatGUI = new ProviderChatGUI();
+				}
+
+				caseVal = 1;
+				break;
 			}
 
 		}
 	}
 }
-
 
 //private class SendBidDecision extends OneShotBehaviour {
 //

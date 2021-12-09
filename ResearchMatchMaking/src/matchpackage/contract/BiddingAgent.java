@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import matchpackage.database.ProjectList;
 
 public class BiddingAgent extends Agent {
 
@@ -13,9 +14,13 @@ public class BiddingAgent extends Agent {
 	int check = 0;
 	String customerContractDecision = "PENDING";
 	String providerContractDecision = "PENDING";
+	ProjectList projectList;
+	
+	
 
 	protected void setup() {
 
+		projectList = new ProjectList();
 		addBehaviour(new AcceptContractRequest(this, time));
 
 	}
@@ -90,6 +95,9 @@ public class BiddingAgent extends Agent {
 				if (customerContractDecision.contentEquals("ACCEPT")
 						&& providerContractDecision.contentEquals("ACCEPT")) {
 					System.out.println("Contracts have been accepted by both the users");
+					ACLMessage msgTrackerGUI = new ACLMessage(ACLMessage.REQUEST_WHENEVER);
+					msgTrackerGUI.addReceiver(new AID(providerName, AID.ISLOCALNAME));
+					send(msgTrackerGUI);
 
 				}
 			check = 0;

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import matchpackage.afterMarket.ClientFeedbackGUI;
-import matchpackage.afterMarket.ProviderFeedbackGUI;
-import matchpackage.projectCreator.ClientChatGUI;
-import matchpackage.projectCreator.ProviderChatGUI;
-import matchpackage.tracker.ClientProjectGUI;
-import matchpackage.tracker.ProviderProjectGUI;
+import matchpackage.contract.ClientChatGUI;
+import matchpackage.contract.ClientFeedbackGUI;
+import matchpackage.contract.ClientProjectGUI;
+import matchpackage.contract.ProviderChatGUI;
+import matchpackage.contract.ProviderFeedbackGUI;
+import matchpackage.contract.ProviderProjectGUI;
 
 public class SignUpGUI extends JFrame implements ActionListener {
 

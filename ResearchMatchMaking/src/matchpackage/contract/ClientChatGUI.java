@@ -1,4 +1,4 @@
-package matchpackage.projectCreator;
+package matchpackage.contract;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
