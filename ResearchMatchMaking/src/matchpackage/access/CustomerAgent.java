@@ -35,6 +35,7 @@ public class CustomerAgent extends EnhancedAgent {
 	ProviderList providerListNew;
 	private ArrayList<Provider> sortedProviders;
 	private ArrayList<Provider> leftProviders;
+	private ArrayList<Provider> premiumProviders;
 	private ClientProjectGUI clientProjectGUI;
 	private ClientChatGUI clientChatGUI;
 	private int render = 0;
@@ -49,7 +50,7 @@ public class CustomerAgent extends EnhancedAgent {
 		addBehaviour(new ShowGUICustomer(this, 10000));
 
 	}
-	
+
 	public void closeFeedbackWindow()
 
 	{
@@ -60,10 +61,7 @@ public class CustomerAgent extends EnhancedAgent {
 
 			}
 		});
-		
-		
-		
-		
+
 	}
 
 	public void changeRequest(String text) {
@@ -71,14 +69,14 @@ public class CustomerAgent extends EnhancedAgent {
 		System.out.println("I am inside changeRequest fucntion");
 		System.out.println("Valeu of changeRequestText is " + changeRequestText);
 	}
-	
+
 	public void sendPaymentConfirmation() {
-		
+
 		addBehaviour(new SendPaymentConfirmationBehaviour());
-		
+
 	}
-	
-	private class SendPaymentConfirmationBehaviour extends OneShotBehaviour{
+
+	private class SendPaymentConfirmationBehaviour extends OneShotBehaviour {
 
 		@Override
 		public void action() {
@@ -87,13 +85,10 @@ public class CustomerAgent extends EnhancedAgent {
 			sendMessageConfirm.setContent("Payment done");
 			sendMessageConfirm.addReceiver(new AID("BIDDING", AID.ISLOCALNAME));
 			send(sendMessageConfirm);
-			
-			
+
 		}
-		
+
 	}
-	
-	
 
 	public void afterAcceptingContract(String text) {
 
@@ -175,13 +170,13 @@ public class CustomerAgent extends EnhancedAgent {
 				clientProjectGUI.setStatusArea(messageContentText);
 
 			}
-			
+
 			clientFeedbackGUI = new ClientFeedbackGUI(myAgent);
 
 			System.out.println("I have reached here");
 			ACLMessage messagePayment = blockingReceive();
-			if(messagePayment.getPerformative() == ACLMessage.REQUEST) {
-				
+			if (messagePayment.getPerformative() == ACLMessage.REQUEST) {
+
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -190,11 +185,9 @@ public class CustomerAgent extends EnhancedAgent {
 
 					}
 				});
-				
+
 			}
 		}
-		
-		
 
 	}
 
@@ -221,6 +214,7 @@ public class CustomerAgent extends EnhancedAgent {
 
 			sortedProviders = new ArrayList<Provider>();
 			leftProviders = new ArrayList<Provider>();
+			premiumProviders = new ArrayList<Provider>();
 
 			String[] kewywordsSplitArray1 = keywords.split(",");
 			ArrayList<String> keywordsSplit1 = new ArrayList<String>();
@@ -232,17 +226,30 @@ public class CustomerAgent extends EnhancedAgent {
 			for (Provider provider : providerListNew.getProviders()) {
 
 				ArrayList<String> dataKeywords1 = provider.getKeywords();
-
-				if (!(Collections.disjoint(dataKeywords1, keywordsSplit1)))
-					sortedProviders.add(provider);
-				else
-					leftProviders.add(provider);
+//
+//				if (!(Collections.disjoint(dataKeywords1, keywordsSplit1)))
+//					sortedProviders.add(provider);
+//				else
+//					leftProviders.add(provider);
+				
+				if(provider.getPlan().contentEquals("Premium")) {
+					premiumProviders.add(provider);
+				}
+				else {
+					if(!(Collections.disjoint(dataKeywords1, keywordsSplit1)) )
+						sortedProviders.add(provider);
+					else
+						leftProviders.add(provider);
+				}
 
 			}
+			
+			premiumProviders.addAll(sortedProviders);
+			premiumProviders.addAll(leftProviders);
 
-			sortedProviders.addAll(leftProviders);
+			//sortedProviders.addAll(leftProviders);
 
-			displayProviders = providerListNew.getStringProviders(sortedProviders);
+			displayProviders = providerListNew.getStringProviders(premiumProviders);
 
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
