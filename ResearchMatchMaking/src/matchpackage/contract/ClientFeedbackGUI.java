@@ -15,22 +15,25 @@ import matchpackage.access.CustomerAgent;
 public class ClientFeedbackGUI extends JFrame implements ActionListener {
 
 	private JPanel overall;
-	private JPanel JPanel1, JPanel2, JPanel3;
+	private JPanel JPanel1, JPanel2, JPanel3, JPanel4;
 	private JLabel commentLabel, ratingLabel;
-	private JTextArea commentArea, ratingArea;
-	private JButton submit;
+	private JTextArea commentArea, ratingArea, paymentArea;
+	private JButton submit, paymentButton;
 	CustomerAgent customerAgent;
 
 	public ClientFeedbackGUI(CustomerAgent customerAgent) {
 
+		this.customerAgent = customerAgent;
 		overall = new JPanel();
 		JPanel1 = new JPanel();
 		JPanel2 = new JPanel();
 		JPanel3 = new JPanel();
+		JPanel4 = new JPanel();
 
-		overall.setLayout(new GridLayout(3, 1, 1, 1));
+		overall.setLayout(new GridLayout(4, 1, 1, 1));
 		JPanel1.setLayout(new GridLayout(1, 2, 1, 1));
 		JPanel2.setLayout(new GridLayout(1, 2, 1, 1));
+		JPanel4.setLayout(new GridLayout(1, 2, 1, 1));
 
 		commentLabel = new JLabel("Enter comments for the provider");
 		ratingLabel = new JLabel("Leave a rating");
@@ -38,6 +41,11 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 		commentArea = new JTextArea(5, 10);
 		ratingArea = new JTextArea(5, 10);
 		submit = new JButton("Submit");
+		
+		paymentButton = new JButton("Pay the Amount");
+		paymentButton.addActionListener(this);
+		paymentArea = new JTextArea(5,10);
+		
 
 		JPanel1.add(commentLabel);
 		JPanel1.add(commentArea);
@@ -46,10 +54,15 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 		JPanel2.add(ratingArea);
 
 		JPanel3.add(submit);
+		
+		JPanel4.add(paymentArea);
+		JPanel4.add(paymentButton);
+		
 
 		overall.add(JPanel1);
 		overall.add(JPanel2);
 		overall.add(JPanel3);
+		overall.add(JPanel4);
 
 		getContentPane().add(overall);
 		setTitle("Client Feedback Messenger");
@@ -66,7 +79,17 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 			this.setVisible(false);
 			customerAgent.closeFeedbackWindow();
 		}
+		
+		if(e.getSource() == paymentButton) {
+			customerAgent.sendPaymentConfirmation();
+		}
 
 	}
+	
+	public void setPaymentArea(String text) {
+		paymentArea.setText(text);
+	}
+	
+	
 
 }

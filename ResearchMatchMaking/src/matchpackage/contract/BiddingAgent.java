@@ -15,8 +15,6 @@ public class BiddingAgent extends Agent {
 	String customerContractDecision = "PENDING";
 	String providerContractDecision = "PENDING";
 	ProjectList projectList;
-	
-	
 
 	protected void setup() {
 
@@ -71,7 +69,7 @@ public class BiddingAgent extends Agent {
 					check = 3;
 					System.out.println("I am exiting case 2 of bididng agent");
 				}
-				
+
 				break;
 
 			case 3:
@@ -82,7 +80,7 @@ public class BiddingAgent extends Agent {
 						providerContractDecision = msgContractSecond.getContent();
 					else
 						customerContractDecision = msgContractSecond.getContent();
-					
+
 				}
 				check = 4;
 				System.out.println("I am exiting case 3 of bidding agent");
@@ -99,11 +97,42 @@ public class BiddingAgent extends Agent {
 					msgTrackerGUI.addReceiver(new AID(providerName, AID.ISLOCALNAME));
 					msgTrackerGUI.addReceiver(new AID(customerName, AID.ISLOCALNAME));
 					send(msgTrackerGUI);
+					check = 5;
 
 				}
-			check = 0;
+
+				break;
+
+			case 5:
+
+				ACLMessage paymentMessage = blockingReceive();
+				System.out.println("I am in case 5 of bidding agent");
+				if (paymentMessage.getPerformative() == ACLMessage.PROPAGATE) {
+					ACLMessage paymentSendMsg = new ACLMessage(ACLMessage.REQUEST);
+					paymentSendMsg.addReceiver(new AID(customerName, AID.ISLOCALNAME));
+					paymentSendMsg.setContent("Please pay the 2500 Dollars");
+					send(paymentSendMsg);
+					check = 6;
+				}
+
 				
 				break;
+				
+			case 6:
+				ACLMessage paymentMessageReceived = blockingReceive();
+				if(paymentMessageReceived.getPerformative() == ACLMessage.AGREE) {
+					ACLMessage paymentConfirmMsg = new ACLMessage(ACLMessage.CONFIRM);
+					paymentConfirmMsg.setContent("Payment is confirmed");
+					paymentConfirmMsg.addReceiver(new AID(providerName, AID.ISLOCALNAME));
+					send(paymentConfirmMsg);
+					
+					check = 1;
+				}
+				
+				break;
+				
+				
+				
 
 			}
 

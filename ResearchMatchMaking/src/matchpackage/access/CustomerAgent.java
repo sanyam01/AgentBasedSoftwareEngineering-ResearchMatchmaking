@@ -71,6 +71,29 @@ public class CustomerAgent extends EnhancedAgent {
 		System.out.println("I am inside changeRequest fucntion");
 		System.out.println("Valeu of changeRequestText is " + changeRequestText);
 	}
+	
+	public void sendPaymentConfirmation() {
+		
+		addBehaviour(new SendPaymentConfirmationBehaviour());
+		
+	}
+	
+	private class SendPaymentConfirmationBehaviour extends OneShotBehaviour{
+
+		@Override
+		public void action() {
+			// TODO Auto-generated method stub
+			ACLMessage sendMessageConfirm = new ACLMessage(ACLMessage.AGREE);
+			sendMessageConfirm.setContent("Payment done");
+			sendMessageConfirm.addReceiver(new AID("BIDDING", AID.ISLOCALNAME));
+			send(sendMessageConfirm);
+			
+			
+		}
+		
+	}
+	
+	
 
 	public void afterAcceptingContract(String text) {
 
@@ -155,7 +178,23 @@ public class CustomerAgent extends EnhancedAgent {
 			
 			clientFeedbackGUI = new ClientFeedbackGUI(myAgent);
 
+			System.out.println("I have reached here");
+			ACLMessage messagePayment = blockingReceive();
+			if(messagePayment.getPerformative() == ACLMessage.REQUEST) {
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						System.out.println("I am reaching here in though");
+						clientFeedbackGUI.setPaymentArea(messagePayment.getContent());
+
+					}
+				});
+				
+			}
 		}
+		
+		
 
 	}
 

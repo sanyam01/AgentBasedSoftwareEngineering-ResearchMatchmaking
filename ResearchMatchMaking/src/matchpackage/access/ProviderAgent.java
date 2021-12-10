@@ -134,9 +134,9 @@ public class ProviderAgent extends EnhancedAgent {
 	public void afterContractClick(String text) {
 		contractDecision = text;
 	}
-	
+
 	public void openFeedbackGUI() {
-		
+
 	}
 
 	private class ShowGUIProvider extends TickerBehaviour {
@@ -332,11 +332,29 @@ public class ProviderAgent extends EnhancedAgent {
 					msgTracker.addReceiver(new AID(customerName, AID.ISLOCALNAME));
 					msgTracker.setContent(contentPr);
 					send(msgTracker);
-					caseVal = 1;
+					caseVal =9;
 
 				}
 
 				break;
+
+			case 9:
+
+				ACLMessage msgPayment = new ACLMessage(ACLMessage.PROPAGATE);
+				msgPayment.addReceiver(new AID("BIDDING", AID.ISLOCALNAME));
+				msgPayment.setContent("ASK FOR PAYMENT");
+				send(msgPayment);
+
+				caseVal = 10;
+				break;
+
+			case 10:
+
+				ACLMessage getPayment = blockingReceive();
+				String paymentText = getPayment.getContent();
+				providerFeedbackGUI.setPaymentArea(paymentText);
+
+				caseVal = 1;
 
 			}
 		}
