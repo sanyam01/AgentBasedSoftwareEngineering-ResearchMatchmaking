@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import matchpackage.access.CustomerAgent;
+
 public class ClientFeedbackGUI extends JFrame implements ActionListener {
 
 	private JPanel overall;
@@ -17,8 +19,9 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 	private JLabel commentLabel, ratingLabel;
 	private JTextArea commentArea, ratingArea;
 	private JButton submit;
+	CustomerAgent customerAgent;
 
-	public ClientFeedbackGUI() {
+	public ClientFeedbackGUI(CustomerAgent customerAgent) {
 
 		overall = new JPanel();
 		JPanel1 = new JPanel();
@@ -59,6 +62,10 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getSource() == submit) {
+			this.setVisible(false);
+			customerAgent.closeFeedbackWindow();
+		}
 
 	}
 

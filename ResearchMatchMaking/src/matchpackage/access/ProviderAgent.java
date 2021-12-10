@@ -12,6 +12,7 @@ import jade.lang.acl.ACLMessage;
 import matchpackage.application.EnhancedAgent;
 import matchpackage.application.ProviderGUI;
 import matchpackage.contract.ProviderChatGUI;
+import matchpackage.contract.ProviderFeedbackGUI;
 import matchpackage.contract.ProviderProjectGUI;
 import matchpackage.database.Provider;
 
@@ -23,24 +24,67 @@ public class ProviderAgent extends EnhancedAgent {
 	String customerName = "";
 	String bidValue;
 	String decision = "PENDING";
-	// SendBidDecision madeBehaviour;
 	int step = 0;
 	int caseVal = 0;
 	String contractDecision = "PENDING";
 	private ProviderProjectGUI providerProjectGUI;
 	private ProviderChatGUI providerChatGUI;
+	String trackValues = "PENDING";
+	String endProject = "PENDING";
+	String changeRequest = "PENDING";
+	ProviderFeedbackGUI providerFeedbackGUI;
 
 	protected void setup() {
 		createAgent("Bidding", "matchpackage.contract.BiddingAgent");
 		providerGUI = new ProviderGUI(this);
 		System.out.printf("Hello! My name is %s%n", getLocalName());
-		//addBehaviour(new ProjectTracker(this, 2000));
+		// addBehaviour(new ProjectTracker(this, 2000));
 		addBehaviour(new ShowGUIProvider(this, 2000));
 		// addBehaviour(new SendBidDecisions());
 
 		// addBehaviour(new chatMessenger());
 
 	}
+
+	public void updateTracker(ProviderAgent a) {
+//		System.out.println("Update tracker in provider agent");
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				// customerGUI.setTextContract(displayProviders);
+//				addBehaviour(new RunUpdateTracker(a, 10000));
+//
+//			}
+//		});
+		trackValues = "DONE";
+
+	}
+
+	public void afterChangeRequest(String text) {
+		this.changeRequest = text;
+	}
+
+	public void endProject() {
+
+		endProject = "END";
+		providerFeedbackGUI = new ProviderFeedbackGUI(this);
+	}
+
+//	private class RunUpdateTracker extends TickerBehaviour {
+//
+//		public RunUpdateTracker(Agent a, long period) {
+//			super(a, period);
+//			// TODO Auto-generated constructor stub
+//		}
+//
+//		@Override
+//		protected void onTick() {
+//			// TODO Auto-generated method stub
+//			System.out.println("Running the update tracker");
+//			
+//		}
+//		
+//	}
 
 //	private class ProjectTracker extends TickerBehaviour {
 //
@@ -90,11 +134,19 @@ public class ProviderAgent extends EnhancedAgent {
 	public void afterContractClick(String text) {
 		contractDecision = text;
 	}
+	
+	public void openFeedbackGUI() {
+		
+	}
 
 	private class ShowGUIProvider extends TickerBehaviour {
 
+		ProviderAgent providerAgent;
+
 		ShowGUIProvider(Agent a, long period) {
+
 			super(a, period);
+			providerAgent = (ProviderAgent) a;
 		}
 
 		@Override
@@ -210,7 +262,7 @@ public class ProviderAgent extends EnhancedAgent {
 						decision = "PENDING";
 						contractDecision = "PENDING";
 					}
-					
+
 					caseVal = 5;
 
 				}
@@ -223,14 +275,70 @@ public class ProviderAgent extends EnhancedAgent {
 				ACLMessage startMsg = blockingReceive();
 				if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
 
-					providerProjectGUI = new ProviderProjectGUI();
+					providerProjectGUI = new ProviderProjectGUI(providerAgent);
 					providerChatGUI = new ProviderChatGUI();
+					caseVal = 6;
 				}
 
-				caseVal = 1;
 				break;
-			}
 
+			case 6:
+
+				if (trackValues.contentEquals("DONE")) {
+
+					ACLMessage msgTracker = new ACLMessage(ACLMessage.INFORM);
+					String content = providerProjectGUI.getDeadlineArea() + "*" + providerProjectGUI.getProgressArea()
+							+ "*" + providerProjectGUI.getTimeArea();
+					msgTracker.addReceiver(new AID(customerName, AID.ISLOCALNAME));
+					msgTracker.setContent(content);
+					send(msgTracker);
+					caseVal = 8;
+				}
+
+				break;
+
+//			case 7:
+//				System.out.println("I am inside case 7");
+//				ACLMessage recMsgChange = myAgent.blockingReceive();
+//				System.out.println("I have received the message");
+//				System.out.println(recMsgChange.getPerformative());
+//				SwingUtilities.invokeLater(new Runnable() {
+//					@Override
+//					public void run() {
+//
+//						providerProjectGUI.setRequestArea(recMsgChange.getContent());
+//
+//					}
+//				});
+//				
+//				while ((changeRequest.contentEquals("PENDING"))) {
+//					System.out.println("I am in while loop of provider agent");
+//				}
+//				if (recMsgChange.getPerformative() == ACLMessage.PROPOSE) {
+//					ACLMessage recMsgChangeReply = recMsgChange.createReply();
+//					recMsgChangeReply.setPerformative(ACLMessage.INFORM);
+//					recMsgChangeReply.setContent(changeRequest);
+//					send(recMsgChangeReply);
+//					caseVal = 8;
+//				}
+//
+//				break;
+
+			case 8:
+
+				if (endProject.contentEquals("END")) {
+					ACLMessage msgTracker = new ACLMessage(ACLMessage.CANCEL);
+					String contentPr = "END PROJECT";
+					msgTracker.addReceiver(new AID(customerName, AID.ISLOCALNAME));
+					msgTracker.setContent(contentPr);
+					send(msgTracker);
+					caseVal = 1;
+
+				}
+
+				break;
+
+			}
 		}
 	}
 }

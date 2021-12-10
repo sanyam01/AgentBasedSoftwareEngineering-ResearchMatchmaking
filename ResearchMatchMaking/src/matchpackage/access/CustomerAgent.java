@@ -16,7 +16,11 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import matchpackage.application.CustomerGUI;
 import matchpackage.application.EnhancedAgent;
+import matchpackage.contract.ClientChatGUI;
+import matchpackage.contract.ClientFeedbackGUI;
 import matchpackage.contract.ClientProjectGUI;
+import matchpackage.contract.ProviderChatGUI;
+import matchpackage.contract.ProviderProjectGUI;
 import matchpackage.database.Customer;
 import matchpackage.database.Provider;
 import matchpackage.database.ProviderList;
@@ -32,7 +36,11 @@ public class CustomerAgent extends EnhancedAgent {
 	private ArrayList<Provider> sortedProviders;
 	private ArrayList<Provider> leftProviders;
 	private ClientProjectGUI clientProjectGUI;
+	private ClientChatGUI clientChatGUI;
 	private int render = 0;
+	String changeRequestText = "PENDING";
+	String providerName = "";
+	ClientFeedbackGUI clientFeedbackGUI;
 
 	protected void setup() {
 
@@ -40,6 +48,28 @@ public class CustomerAgent extends EnhancedAgent {
 		providerListNew = new ProviderList();
 		addBehaviour(new ShowGUICustomer(this, 10000));
 
+	}
+	
+	public void closeFeedbackWindow()
+
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				clientFeedbackGUI.setVisible(false);
+
+			}
+		});
+		
+		
+		
+		
+	}
+
+	public void changeRequest(String text) {
+		changeRequestText = text;
+		System.out.println("I am inside changeRequest fucntion");
+		System.out.println("Valeu of changeRequestText is " + changeRequestText);
 	}
 
 	public void afterAcceptingContract(String text) {
@@ -52,9 +82,9 @@ public class CustomerAgent extends EnhancedAgent {
 	private class SendContractMessage extends OneShotBehaviour {
 
 		String contractDec;
-		Agent myAgent;
+		CustomerAgent myAgent;
 
-		SendContractMessage(String dec, Agent a) {
+		SendContractMessage(String dec, CustomerAgent a) {
 			this.myAgent = a;
 			this.contractDec = dec;
 		}
@@ -70,28 +100,60 @@ public class CustomerAgent extends EnhancedAgent {
 			msgContractDec.setContent(contractDec);
 			send(msgContractDec);
 
-			addBehaviour(new ProjectTracker(myAgent, 10000));
+			System.out.println("Project is on too in customer");
+			ACLMessage startMsgClient = blockingReceive();
+			if (startMsgClient.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
 
-		}
-
-	}
-
-	private class ProjectTracker extends TickerBehaviour {
-
-		public ProjectTracker(Agent a, long period) {
-			super(a, period);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected void onTick() {
-			// TODO Auto-generated method stub
-			System.out.println("Project is on too");
-			ACLMessage startMsg = blockingReceive();
-			if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
-
-				clientProjectGUI = new ClientProjectGUI();
+				clientProjectGUI = new ClientProjectGUI(myAgent);
+				clientChatGUI = new ClientChatGUI();
 			}
+
+			ACLMessage messageContent = blockingReceive();
+			if (messageContent.getPerformative() == ACLMessage.INFORM) {
+				providerName = messageContent.getSender().toString();
+				String msgContent = messageContent.getContent();
+				String[] dataContent = msgContent.split("\\*");
+				clientProjectGUI.setDeadlineArea(dataContent[0]);
+				clientProjectGUI.setProgressArea(dataContent[1]);
+				clientProjectGUI.setTimeArea(dataContent[2]);
+
+			}
+//			int a = 0;
+//			while (changeRequestText.contentEquals("PENDING")) {
+//				if (a == 10000) {
+//					System.out.println("I am inside while");
+//					a = 0;
+//				}
+//					
+//				a = a+1;
+//			}
+//			System.out.println("I am out of while loop");
+//			System.out.println("The provider is " + providerName);
+//			
+//
+//			ACLMessage messageChangeText = new ACLMessage(ACLMessage.PROPOSE);
+//			messageChangeText.setContent(changeRequestText);
+//			messageChangeText.addReceiver(new AID(providerName, AID.ISLOCALNAME));
+//			send(messageChangeText);
+//			System.out.println("I have sent the message");
+//
+//			ACLMessage messageDecisionText = blockingReceive();
+//			if (messageDecisionText.getPerformative() == ACLMessage.INFORM) {
+//				clientProjectGUI.setTextArea(messageDecisionText.getContent());
+//			}
+
+			ACLMessage messageContentEnd = blockingReceive();
+			if (messageContentEnd.getPerformative() == ACLMessage.CANCEL) {
+				String messageContentText = messageContentEnd.getContent();
+
+				clientProjectGUI.setDeadlineArea("");
+				clientProjectGUI.setProgressArea("");
+				clientProjectGUI.setTimeArea("");
+				clientProjectGUI.setStatusArea(messageContentText);
+
+			}
+			
+			clientFeedbackGUI = new ClientFeedbackGUI(myAgent);
 
 		}
 

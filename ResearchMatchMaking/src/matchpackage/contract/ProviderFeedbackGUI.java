@@ -10,56 +10,64 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class ProviderFeedbackGUI  extends JFrame implements ActionListener  {
+import matchpackage.access.ProviderAgent;
 
-		private JPanel overall;
-		private JPanel JPanel1, JPanel2, JPanel3;
-		private JLabel commentLabel, ratingLabel;
-		private JTextArea commentArea, ratingArea;
-		private JButton submit;
+public class ProviderFeedbackGUI extends JFrame implements ActionListener {
 
-		public ProviderFeedbackGUI() {
+	private JPanel overall;
+	private JPanel JPanel1, JPanel2, JPanel3;
+	private JLabel commentLabel, ratingLabel;
+	private JTextArea commentArea, ratingArea;
+	private JButton submit;
+	private ProviderAgent providerAgent;
 
-			overall = new JPanel();
-			JPanel1 = new JPanel();
-			JPanel2 = new JPanel();
-			JPanel3 = new JPanel();
+	public ProviderFeedbackGUI(ProviderAgent agent) {
+		
+		this.providerAgent = agent;
 
-			overall.setLayout(new GridLayout(3, 1, 1, 1));
-			JPanel1.setLayout(new GridLayout(1, 2, 1, 1));
-			JPanel2.setLayout(new GridLayout(1, 2, 1, 1));
+		overall = new JPanel();
+		JPanel1 = new JPanel();
+		JPanel2 = new JPanel();
+		JPanel3 = new JPanel();
 
-			commentLabel = new JLabel("Enter comments for the client");
-			ratingLabel = new JLabel("Leave a rating");
+		overall.setLayout(new GridLayout(3, 1, 1, 1));
+		JPanel1.setLayout(new GridLayout(1, 2, 1, 1));
+		JPanel2.setLayout(new GridLayout(1, 2, 1, 1));
 
-			commentArea = new JTextArea(5, 10);
-			ratingArea = new JTextArea(5, 10);
-			submit = new JButton("Submit");
+		commentLabel = new JLabel("Enter comments for the client");
+		ratingLabel = new JLabel("Leave a rating");
 
-			JPanel1.add(commentLabel);
-			JPanel1.add(commentArea);
+		commentArea = new JTextArea(5, 10);
+		ratingArea = new JTextArea(5, 10);
+		submit = new JButton("Submit");
 
-			JPanel2.add(ratingLabel);
-			JPanel2.add(ratingArea);
+		JPanel1.add(commentLabel);
+		JPanel1.add(commentArea);
 
-			JPanel3.add(submit);
+		JPanel2.add(ratingLabel);
+		JPanel2.add(ratingArea);
 
-			overall.add(JPanel1);
-			overall.add(JPanel2);
-			overall.add(JPanel3);
+		JPanel3.add(submit);
 
-			getContentPane().add(overall);
-			setTitle("Provider Feedback Messenger");
-			setSize(600, 300);
-			setVisible(true);
+		overall.add(JPanel1);
+		overall.add(JPanel2);
+		overall.add(JPanel3);
 
-		}
+		getContentPane().add(overall);
+		setTitle("Provider Feedback Messenger");
+		setSize(600, 300);
+		setVisible(true);
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(e.getSource() == submit) {
+			this.setVisible(false);
 		}
 
 	}
 
+}
