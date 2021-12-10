@@ -46,6 +46,18 @@ public class ProviderAgent extends EnhancedAgent {
 
 	}
 
+	public void closeFeedbackWindow()
+
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				providerFeedbackGUI.setVisible(false);
+
+			}
+		});
+
+	}
 	public void updateTracker(ProviderAgent a) {
 //		System.out.println("Update tracker in provider agent");
 //		SwingUtilities.invokeLater(new Runnable() {
@@ -355,6 +367,8 @@ public class ProviderAgent extends EnhancedAgent {
 				providerFeedbackGUI.setPaymentArea(paymentText);
 
 				caseVal = 1;
+				
+				break;
 
 			}
 		}
