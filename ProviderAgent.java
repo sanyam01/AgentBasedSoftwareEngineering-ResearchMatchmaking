@@ -11,9 +11,8 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import matchpackage.application.EnhancedAgent;
 import matchpackage.application.ProviderGUI;
-import matchpackage.application.GUIAgent.ShowGUICustomerProvider;
-import matchpackage.contract.ClientProjectGUI;
 import matchpackage.contract.ProviderChatGUI;
+import matchpackage.contract.ProviderFeedbackGUI;
 import matchpackage.contract.ProviderProjectGUI;
 import matchpackage.database.Provider;
 
@@ -25,26 +24,67 @@ public class ProviderAgent extends EnhancedAgent {
 	String customerName = "";
 	String bidValue;
 	String decision = "PENDING";
-	// SendBidDecision madeBehaviour;
 	int step = 0;
 	int caseVal = 0;
 	String contractDecision = "PENDING";
 	private ProviderProjectGUI providerProjectGUI;
 	private ProviderChatGUI providerChatGUI;
-	private ProviderAgent providerAgent;
-	
+	String trackValues = "PENDING";
+	String endProject = "PENDING";
+	String changeRequest = "PENDING";
+	ProviderFeedbackGUI providerFeedbackGUI;
 
 	protected void setup() {
 		createAgent("Bidding", "matchpackage.contract.BiddingAgent");
 		providerGUI = new ProviderGUI(this);
 		System.out.printf("Hello! My name is %s%n", getLocalName());
-		//addBehaviour(new ProjectTracker(this, 2000));
+		// addBehaviour(new ProjectTracker(this, 2000));
 		addBehaviour(new ShowGUIProvider(this, 2000));
 		// addBehaviour(new SendBidDecisions());
 
 		// addBehaviour(new chatMessenger());
 
 	}
+
+	public void updateTracker(ProviderAgent a) {
+//		System.out.println("Update tracker in provider agent");
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				// customerGUI.setTextContract(displayProviders);
+//				addBehaviour(new RunUpdateTracker(a, 10000));
+//
+//			}
+//		});
+		trackValues = "DONE";
+
+	}
+
+	public void afterChangeRequest(String text) {
+		this.changeRequest = text;
+	}
+
+	public void endProject() {
+
+		endProject = "END";
+		providerFeedbackGUI = new ProviderFeedbackGUI(this);
+	}
+
+//	private class RunUpdateTracker extends TickerBehaviour {
+//
+//		public RunUpdateTracker(Agent a, long period) {
+//			super(a, period);
+//			// TODO Auto-generated constructor stub
+//		}
+//
+//		@Override
+//		protected void onTick() {
+//			// TODO Auto-generated method stub
+//			System.out.println("Running the update tracker");
+//			
+//		}
+//		
+//	}
 
 //	private class ProjectTracker extends TickerBehaviour {
 //
@@ -92,17 +132,21 @@ public class ProviderAgent extends EnhancedAgent {
 	}
 
 	public void afterContractClick(String text) {
-		System.out.println("Coming in Method After Contract Clicks");
 		contractDecision = text;
-		System.out.println("Print Contract Decision");
-		
+	}
+	
+	public void openFeedbackGUI() {
 		
 	}
 
 	private class ShowGUIProvider extends TickerBehaviour {
 
+		ProviderAgent providerAgent;
+
 		ShowGUIProvider(Agent a, long period) {
+
 			super(a, period);
+			providerAgent = (ProviderAgent) a;
 		}
 
 		@Override
@@ -218,7 +262,7 @@ public class ProviderAgent extends EnhancedAgent {
 						decision = "PENDING";
 						contractDecision = "PENDING";
 					}
-					
+
 					caseVal = 5;
 
 				}
@@ -229,72 +273,73 @@ public class ProviderAgent extends EnhancedAgent {
 
 				System.out.println("Project is on too");
 				ACLMessage startMsg = blockingReceive();
-				System.out.println("Print message" +startMsg);
 				if (startMsg.getPerformative() == ACLMessage.REQUEST_WHENEVER) {
 
-					//providerProjectGUI = new ProviderProjectGUI(providerAgent);
-					providerChatGUI = new ProviderChatGUI(providerAgent);
-					
+					providerProjectGUI = new ProviderProjectGUI(providerAgent);
+					providerChatGUI = new ProviderChatGUI();
+					caseVal = 6;
 				}
 
-				caseVal = 1;
 				break;
+
+			case 6:
+
+				if (trackValues.contentEquals("DONE")) {
+
+					ACLMessage msgTracker = new ACLMessage(ACLMessage.INFORM);
+					String content = providerProjectGUI.getDeadlineArea() + "*" + providerProjectGUI.getProgressArea()
+							+ "*" + providerProjectGUI.getTimeArea();
+					msgTracker.addReceiver(new AID(customerName, AID.ISLOCALNAME));
+					msgTracker.setContent(content);
+					send(msgTracker);
+					caseVal = 8;
+				}
+
+				break;
+
+//			case 7:
+//				System.out.println("I am inside case 7");
+//				ACLMessage recMsgChange = myAgent.blockingReceive();
+//				System.out.println("I have received the message");
+//				System.out.println(recMsgChange.getPerformative());
+//				SwingUtilities.invokeLater(new Runnable() {
+//					@Override
+//					public void run() {
+//
+//						providerProjectGUI.setRequestArea(recMsgChange.getContent());
+//
+//					}
+//				});
+//				
+//				while ((changeRequest.contentEquals("PENDING"))) {
+//					System.out.println("I am in while loop of provider agent");
+//				}
+//				if (recMsgChange.getPerformative() == ACLMessage.PROPOSE) {
+//					ACLMessage recMsgChangeReply = recMsgChange.createReply();
+//					recMsgChangeReply.setPerformative(ACLMessage.INFORM);
+//					recMsgChangeReply.setContent(changeRequest);
+//					send(recMsgChangeReply);
+//					caseVal = 8;
+//				}
+//
+//				break;
+
+			case 8:
+
+				if (endProject.contentEquals("END")) {
+					ACLMessage msgTracker = new ACLMessage(ACLMessage.CANCEL);
+					String contentPr = "END PROJECT";
+					msgTracker.addReceiver(new AID(customerName, AID.ISLOCALNAME));
+					msgTracker.setContent(contentPr);
+					send(msgTracker);
+					caseVal = 1;
+
+				}
+
+				break;
+
 			}
-
 		}
-	}
-
-	public void sendMessage(String msg) {
-		// TODO Auto-generated method stub
-		System.out.println("send message to customer method is called");
-		
-		addBehaviour(new SendMessagetoCustomer());
-		
-	}
-	
-	
-	private class SendMessagetoCustomer extends CyclicBehaviour
-	{
-
-		@Override
-		public void action() {
-			// TODO Auto-generated method stub
-			System.out.println("this will send the message to client ");
-			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			msg.addReceiver(new AID(customerName, AID.ISLOCALNAME));
-			msg.setContent("Project Information updated");
-			send(msg);
-			
-		}
-		
-	}
-
-	public void showChat(String text) {
-		// TODO Auto-generated method stub
-		addBehaviour(new showChat(text));
-		
-	}
-	
-	public class showChat extends OneShotBehaviour {
-
-		String text;
-
-		public showChat(String text) {
-			this.text = text;
-		}
-
-		@Override
-		public void action() {
-
-			System.out.println("class ShowChat extends OneShotBehaviour");
-			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.addReceiver(new AID(text, AID.ISLOCALNAME));
-			msg.setContent("Open Customer GUI");
-			send(msg);
-			
-
-		}
-
 	}
 }
 
