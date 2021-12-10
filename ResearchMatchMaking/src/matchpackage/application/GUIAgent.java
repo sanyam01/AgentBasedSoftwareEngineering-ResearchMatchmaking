@@ -1,6 +1,7 @@
 package matchpackage.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.SwingUtilities;
 
@@ -34,6 +35,9 @@ public class GUIAgent extends EnhancedAgent {
 	private AID[] providers;
 	private CustomerList customerList;
 	private ProviderList providerList;
+	private ArrayList<Provider> sortedProviders1;
+	private ArrayList<Provider> leftProviders1;
+	private ArrayList<Provider> premiumProviders1;
 
 	public boolean isBool() {
 		return bool;
@@ -84,13 +88,14 @@ public class GUIAgent extends EnhancedAgent {
 		providerList.addProvider(provider);
 		AID providerAID = createAgentAID(name, "matchpackage.access.ProviderAgent");
 		register("Web_services", providerAID);
+		setGuestProviders();
 
 	}
 
 	public void showCustomerProviderGUI(String name) {
 
 		addBehaviour(new ShowGUICustomerProvider(name));
-		
+
 	}
 
 	public void setGuestProviders() {
@@ -134,7 +139,7 @@ public class GUIAgent extends EnhancedAgent {
 				send(reply);
 				System.out.println("I am in case 3 GUI agent");
 
-				//System.out.println(msgGetProvider);
+				// System.out.println(msgGetProvider);
 
 			}
 
@@ -152,7 +157,11 @@ public class GUIAgent extends EnhancedAgent {
 			switch (step) {
 
 			case 2:
-
+				//...................................
+				sortedProviders1 = new ArrayList<Provider>();
+				leftProviders1 = new ArrayList<Provider>();
+				premiumProviders1 = new ArrayList<Provider>();
+				//...................................
 				keywords = appGUI.getGuestGUI().getStringKeyWords();
 				ACLMessage msgSearch = new ACLMessage(ACLMessage.REQUEST);
 				msgSearch.addReceiver(new AID("Search", AID.ISLOCALNAME));
@@ -162,16 +171,65 @@ public class GUIAgent extends EnhancedAgent {
 				ACLMessage msgResponse = myAgent.blockingReceive();
 				//System.out.println(msgResponse);
 
+//				SwingUtilities.invokeLater(new Runnable() {
+//					@Override
+//					public void run() {
+//
+//						//appGUI.getGuestGUI().setContentListProvider(msgResponse.getContent() + "\n");
+//						appGUI.getGuestGUI().setEnterKeywords("");
+//
+//						System.out.println("1000");
+//					}
+//				});
+				
+				//.............................................................................
+				//.............................................................................
+				
+
+				String[] kewywordsSplitArray1 = keywords.split(",");
+				ArrayList<String> keywordsSplit1 = new ArrayList<String>();
+				
+				
+				
+				for (String i : kewywordsSplitArray1) {
+					keywordsSplit1.add(i);
+				}
+				
+				for (Provider provider : providerList.getProviders()) {
+					
+					ArrayList<String> dataKeywords1 = provider.getKeywords();
+					
+					if(provider.getPlan().contentEquals("Premium")) {
+						premiumProviders1.add(provider);
+					}
+					else {
+						if(!(Collections.disjoint(dataKeywords1, keywordsSplit1)) )
+							sortedProviders1.add(provider);
+						else
+							leftProviders1.add(provider);
+					}
+					
+					
+					
+					
+				}
+				premiumProviders1.addAll(sortedProviders1);
+				premiumProviders1.addAll(leftProviders1);
+				
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
 
-						appGUI.getGuestGUI().setContentListProvider(msgResponse.getContent() + "\n");
+						//appGUI.getGuestGUI().setContentListProvider(msgResponse.getContent() + "\n");
+						appGUI.getGuestGUI().setContentListProvider(providerList.getStringProvidersGuest(premiumProviders1) + "\n");
 						appGUI.getGuestGUI().setEnterKeywords("");
 
 						System.out.println("1000");
 					}
 				});
+				
+				//appGUI.getGuestGUI().setContentListProvider(providerList.getStringProvidersGuest(sortedProviders1) + "\n");
+				
 
 				System.out.println("I am back in case2");
 				step = 0;

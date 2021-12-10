@@ -46,6 +46,7 @@ public class ProviderFeedbackGUI extends JFrame implements ActionListener {
 		ratingArea = new JTextArea(5, 10);
 		paymentArea = new JTextArea(5, 10);
 		submit = new JButton("Submit");
+		submit.addActionListener(this);
 
 		JPanel1.add(commentLabel);
 		JPanel1.add(commentArea);
@@ -75,7 +76,8 @@ public class ProviderFeedbackGUI extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 		if (e.getSource() == submit) {
-			this.setVisible(false);
+			commentArea.setText("");
+			ratingArea.setText("");
 		}
 
 	}

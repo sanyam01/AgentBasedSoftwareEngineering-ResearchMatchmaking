@@ -41,6 +41,7 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 		commentArea = new JTextArea(5, 10);
 		ratingArea = new JTextArea(5, 10);
 		submit = new JButton("Submit");
+		submit.addActionListener(this);
 		
 		paymentButton = new JButton("Pay the Amount");
 		paymentButton.addActionListener(this);
@@ -76,8 +77,9 @@ public class ClientFeedbackGUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() == submit) {
-			this.setVisible(false);
 			customerAgent.closeFeedbackWindow();
+			ratingArea.setText("");
+			commentArea.setText("");
 		}
 		
 		if(e.getSource() == paymentButton) {
