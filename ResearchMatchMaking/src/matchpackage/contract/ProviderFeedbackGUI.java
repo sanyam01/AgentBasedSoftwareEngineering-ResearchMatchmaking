@@ -78,6 +78,7 @@ public class ProviderFeedbackGUI extends JFrame implements ActionListener {
 		if (e.getSource() == submit) {
 			commentArea.setText("");
 			ratingArea.setText("");
+			providerAgent.closeFeedbackWindow();
 		}
 
 	}
